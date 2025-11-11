@@ -1,8 +1,8 @@
 ﻿export const classConfig = {
-    Warrior: { color: "#FF0000" },
-    Ranger: { color: "#00FF00" },
-    Mage: { color: "#0000FF" },
-    Bard: { color: "#FFFF00" },
-    Chef: { color: "#FFA500" },
-    Sheep: { color: "#FFFFFF" },
+  Warrior: { color: "#FF6961" }, // stronger pastel red
+  Ranger: { color: "#69ff61" }, // brighter pastel green
+  Mage: { color: "#6197ff" }, // brighter pastel purple
+  Bard: { color: "#a161ff" }, // brighter pastel yellow
+  Chef: { color: "#ffc861" }, // brighter peach
+  Sheep: { color: "#c7d9fc" }, // brighter lavender
 };
