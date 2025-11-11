@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CreateQuestModal from "./CreateQuestModal";
 import { db, Quest } from "../../db/db";
+import { classConfig } from "../../db/classConfig";
 
 type QuestCategory = {
     [key: string]: Quest[];
@@ -117,43 +118,63 @@ export default function QuestsTab() {
     const groupedQuests = Object.entries(quests).filter(([_, questList]) => questList.length > 0); // Filter out empty categories
 
     return (
-        <div className="rounded-2xl border bg-gray-800 text-white p-4 shadow-sm">
-            <h2 className="text-lg font-semibold">Quest Templates</h2>
-            <p className="text-gray-300">Manage your quest templates here.</p>
-
-            <button
-                onClick={() => setIsModalOpen(true)}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-            >
-                Create Quest
-            </button>
-
-            {groupedQuests.map(([category, questList]) => (
-                <div key={category} className="mt-4">
-                    <h3 className="text-md font-medium capitalize text-gray-200">{category} Quests</h3>
-                    <ul className="list-disc pl-5">
-                        {questList.map((quest) => (
-                            <li key={quest.id} className="text-gray-300 flex justify-between items-center">
-                                <span>{quest.title} ({quest.type})</span>
-                                <div>
-                                    <button
-                                        onClick={() => setEditQuest(quest)}
-                                        className="mr-2 px-2 py-1 bg-yellow-500 text-white rounded"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteQuest(quest)}
-                                        className="px-2 py-1 bg-red-500 text-white rounded"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+        <div className="relative">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold">Quest Management</h1>
+                    <p className="text-gray-300">Manage your quest templates here.</p>
                 </div>
-            ))}
+
+                {/* Floating circular + button */}
+                <button
+                    onClick={() => setIsModalOpen(true)}
+                    aria-label="Create Quest"
+                    className="ml-4 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-lg hover:bg-blue-600"
+                >
+                    <span className="text-2xl leading-none">+</span>
+                </button>
+            </div>
+
+            <div className="mt-6 space-y-4">
+                {groupedQuests.map(([category, questList]) => (
+                    <section key={category} className="rounded border bg-transparent p-0">
+                        <div className="flex items-center justify-between p-3 border-b bg-gray-800 rounded-t">
+                            <div className="flex items-center gap-3">
+                                <div
+                                    className="w-3 h-3 rounded-full"
+                                    style={{ background: (classConfig as any)[category as keyof typeof classConfig]?.color || "#6B7280" }}
+                                />
+                                <h3 className="text-md font-semibold capitalize text-gray-100">{category}</h3>
+                            </div>
+                            <span className="text-sm text-gray-300">{questList.length} quests</span>
+                        </div>
+                        <ul className="mt-0 p-3 space-y-2">
+                            {questList.map((quest) => (
+                                <li key={quest.id} className="text-gray-300 flex justify-between items-center p-2 rounded">
+                                    <div>
+                                        <div className="font-medium">{quest.title}</div>
+                                        <div className="text-xs text-gray-400 truncate max-w-xs">{quest.description}</div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setEditQuest(quest)}
+                                            className="px-2 py-1 bg-yellow-500 text-white rounded"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteQuest(quest)}
+                                            className="px-2 py-1 bg-red-500 text-white rounded"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+                ))}
+            </div>
 
             {isModalOpen && (
                 <CreateQuestModal
