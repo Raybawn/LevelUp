@@ -1,7 +1,9 @@
+// ...existing code...
 import React, { useState } from "react";
 import CreateQuestModal from "./CreateQuestModal";
 import { db, Quest } from "../../db/db";
 import { classConfig } from "../../db/classConfig";
+import "../../styles/quests.css";
 
 type QuestCategory = {
   [key: string]: Quest[];
@@ -51,7 +53,7 @@ const initialQuests: QuestCategory = {
       title: "Win 3 battles",
       description: "Participate in battles and win",
       type: "Weekly",
-      class: "General", // Added default class for Weekly quests
+      class: "General",
       baseXP: 300,
       baseGold: 150,
       enabled: true,
@@ -68,7 +70,7 @@ export default function QuestsTab() {
 
   const handleSaveQuest = (newQuest: Quest) => {
     const category =
-      newQuest.type === "Weekly" ? "Weekly" : newQuest.class || "Unknown"; // Ensure category is always a string
+      newQuest.type === "Weekly" ? "Weekly" : newQuest.class || "Unknown";
     setQuests((prevQuests) => ({
       ...prevQuests,
       [category]: [...(prevQuests[category] || []), newQuest],
@@ -81,7 +83,6 @@ export default function QuestsTab() {
         ? "Weekly"
         : updatedQuest.class || "Unknown";
     setQuests((prevQuests) => {
-      // Find the old category containing this quest
       const oldCategory = Object.keys(prevQuests).find((cat) =>
         (prevQuests[cat] || []).some((q) => q.id === updatedQuest.id)
       );
@@ -124,72 +125,61 @@ export default function QuestsTab() {
 
   const groupedQuests = Object.entries(quests).filter(
     ([_, questList]) => questList.length > 0
-  ); // Filter out empty categories
+  );
 
   return (
-    <div className="relative">
-      <div className="flex items-center justify-between">
+    <div className="quests-root">
+      <div className="quests-header-row">
         <div>
-          <h1 className="text-2xl font-bold">Quest Management</h1>
-          <p className="text-gray-300">Manage your quest templates here.</p>
+          <h1 className="page-title">Quest Management</h1>
+          <p className="page-sub">Manage your quest templates here.</p>
         </div>
 
-        {/* Floating circular + button */}
         <button
           onClick={() => setIsModalOpen(true)}
           aria-label="Create Quest"
-          className="ml-4 w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-lg hover:bg-blue-600 btn-pixel"
+          className="floating-create btn btn-blue"
         >
-          <span className="text-2xl leading-none">+</span>
+          <span className="plus">+</span>
         </button>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="quests-list-wrap">
         {groupedQuests.map(([category, questList]) => (
-          <section key={category} className="rounded p-0 card-strong">
-            <div className="relative flex items-center justify-between p-3 border-b bg-slate-800 rounded-t">
-              {/* Colored strip: absolute so it sits flush at the left edge and spans the header height */}
+          <section key={category} className="quest-card">
+            <div className="quest-card-header">
               <div
-                className="absolute left-0 top-0 bottom-0 w-2 rounded-l"
+                className="header-strip"
                 style={{
                   background:
                     (classConfig as any)[category as keyof typeof classConfig]
                       ?.color || "#E5E7EB",
-                  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.06)",
                 }}
               />
-
-              <div className="flex items-center gap-3 pl-4">
-                <h3 className="text-md font-semibold capitalize text-gray-100">
-                  {category}
-                </h3>
+              <div className="header-content">
+                <h3 className="header-title">{category}</h3>
               </div>
-              <span className="text-sm text-gray-300">
-                {questList.length} quests
-              </span>
+              <span className="header-count">{questList.length} quests</span>
             </div>
-            <ul className="mt-0 p-3 space-y-2">
+
+            <ul className="quest-items">
               {questList.map((quest) => (
-                <li
-                  key={quest.id}
-                  className="text-gray-300 flex justify-between items-center p-2 rounded"
-                >
-                  <div>
-                    <div className="font-medium">{quest.title}</div>
-                    <div className="text-sm text-gray-400 truncate max-w-sm">
-                      {quest.description}
-                    </div>
+                <li key={quest.id} className="quest-item">
+                  <div className="quest-main">
+                    <div className="quest-title">{quest.title}</div>
+                    <div className="quest-desc">{quest.description}</div>
                   </div>
-                  <div className="flex items-center gap-2">
+
+                  <div className="quest-actions">
                     <button
                       onClick={() => setEditQuest(quest)}
-                      className="px-2 py-1 bg-yellow-500 text-white rounded btn-pixel"
+                      className="btn btn-yellow"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDeleteQuest(quest)}
-                      className="px-2 py-1 bg-red-500 text-white rounded btn-pixel"
+                      className="btn btn-red"
                     >
                       Delete
                     </button>
@@ -212,9 +202,10 @@ export default function QuestsTab() {
         <CreateQuestModal
           onClose={() => setEditQuest(null)}
           onSave={handleEditQuest}
-          quest={editQuest} // Pass the quest data to the modal
+          quest={editQuest}
         />
       )}
     </div>
   );
 }
+// ...existing code...

@@ -1,0 +1,142 @@
+/* Clean minimal stylesheet: neutral colors, basic borders, simple buttons */
+
+:root {
+  background: #ffffff;
+  color: #111111;
+  font-family: var(
+    --app-font,
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial
+  );
+  padding: 12px;
+}
+
+.quests-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-sub {
+  margin: 4px 0 0;
+  color: #666666;
+  font-size: 13px;
+}
+
+.quests-list-wrap {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quest-card {
+  /* background: #000000; */
+  overflow: hidden;
+  border: 3px solid #000000;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.quest-card-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background: #f8fafc;
+  border-bottom: 3px solid #000000;
+}
+.header-strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+}
+.header-content {
+  padding-left: 12px;
+}
+.header-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.header-count {
+  color: #475569;
+  font-size: 13px;
+}
+
+.quest-items {
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quest-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-radius: 4px;
+  background: #f8fafc;
+  border: 3px solid #000000;
+}
+.quest-main {
+  max-width: 70%;
+}
+.quest-title {
+  font-weight: 600;
+  color: #0f172a;
+}
+.quest-desc {
+  color: #475569;
+  font-size: 13px;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quest-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-blue {
+  font-size: 20px;
+  background: #0ea5e9;
+  /* color: #fff; */
+  border-color: #0b6b8a;
+}
+.btn-yellow {
+  background: #f59e0b;
+  color: #041124;
+  border-color: #b97504;
+}
+.btn-red {
+  background: #ef4444;
+  /* color: #fff; */
+  border-color: #c53030;
+}
+
+@media (max-width: 640px) {
+  .quest-main {
+    max-width: 60%;
+  }
+  .page-title {
+    font-size: 16px;
+  }
+  .btn {
+    font-size: 12px;
+    padding: 5px 6px;
+  }
+}

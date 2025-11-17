@@ -2,56 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* Minimal global baseline - keep Tailwind directives but avoid large theme rules here */
+/* :root {
   --app-font: "Jersey 25", Inter, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial;
-  color-scheme: light dark;
+} */
+
+:root {
+  background: #ffffff;
+  color: #111111;
+  font-family: var(
+    --app-font,
+    Inter,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial
+  );
 }
 
 html,
 body,
 #root {
-  height: 100%;
 }
 
 body {
   font-family: var(--app-font);
-  font-size: 19px;
-  /* Use true black for OLED-friendly background */
-  background-color: #000000;
-  color: #e6eef6; /* light bluish text for contrast */
+  font-size: 16px;
+  background: #ffffff;
+  color: #111827;
 }
 
-/* Card and border utilities */
-.card-strong {
-  @apply bg-transparent border border-slate-700 rounded; /* bolder border */
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
-  background-color: #070e1d;
-}
-
-/* Pixel-style button */
-.btn-pixel {
-  /* @apply inline-flex items-center justify-center px-3 py-1 bg-slate-800 text-white; */
-  border: 2px solid #111827; /* thick pixel border */
-  box-shadow: none;
-  font-family: monospace;
-  transform: translateZ(0);
-}
-
-.btn-pixel:active {
-  transform: translateY(1px);
-}
-
-/* Optional square edge for colored strip */
-.no-round {
-  border-radius: 0 !important;
-}
-
-/* Self-hosted Jersey25 */
+/* Keep the self-hosted Jersey25 font available */
 @font-face {
   font-family: "Jersey 25";
   src: url("/fonts/Jersey25-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+}
+
+/* Small utility classes used across the app (keep minimal) */
+/* .card-strong {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+} */
+/* .btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+} */
+
+/* App root/container */
+.app-root {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 640px;
+}
+
+/* Global page title (consistent across all tabs) */
+.page-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Classic CSS for app navigation (replaces Tailwind nav utilities) */
+.app-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 75%;
+  max-width: 640px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 3px solid #000000;
+  background: rgba(255, 255, 255, 0.5);
+  /* padding: 8px; */
+  /* padding-bottom: calc(8px + env(safe-area-inset-bottom)); */
+  backdrop-filter: blur(6px);
+  gap: 8px;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.tab-button {
+  /* border-radius: 6px; */
+  padding: 8px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-button.active {
+  background: #000000;
+  color: #ffffff;
+  outline: 3px solid #000000;
 }
