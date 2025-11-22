@@ -2,7 +2,7 @@
 
 ## Overview
 
-LevelUp is a personal habit-building Progressive Web App (PWA) inspired by RPG mechanics. It helps users complete daily and weekly "quests" to earn XP and gold, level up classes, and maintain habits.
+LevelUp is a personal habit-building web app inspired by RPG mechanics. It helps users complete daily and weekly "quests" to earn XP and gold, level up classes, and maintain habits.
 
 ## Project Structure
 
@@ -11,21 +11,24 @@ LevelUp
 ├── Guidebook
 │   └── Guidebook.md
 ├── src
-│   ├── main.tsx
-│   ├── App.tsx
+│   ├── main.ts
+│   ├── App.svelte
 │   ├── db
 │   │   └── db.ts
 │   ├── logic
 │   │   └── maintenance.ts
 │   ├── styles
-│   │   └── index.css
+│   │   ├── index.css
+│   │   ├── quests.css
+│   │   └── ui-minimal.css
 │   └── ui
 │       ├── home
-│       │   └── Home.tsx
+│       │   └── Home.svelte
 │       ├── quests
-│       │   └── QuestsTab.tsx
+│       │   ├── CreateQuestModal.svelte
+│       │   └── QuestsTab.svelte
 │       └── settings
-│           └── SettingsTab.tsx
+│           └── SettingsTab.svelte
 ├── package.json
 └── tsconfig.json
 ```
@@ -57,7 +60,7 @@ To start the development server, run:
 npm run dev
 ```
 
-The application will be available at `http://localhost:3000`.
+Vite will print the local URL (by default `http://localhost:5173`).
 
 ### Building for Production
 
@@ -68,10 +71,10 @@ npm run build
 
 ## Features
 
-- Fully offline operation after first load
+- Lightweight Svelte front-end powered by Vite
 - Persistent local data using Dexie and IndexedDB
-- Smooth iOS-style UI with Tailwind CSS and Framer Motion
-- Installable PWA via browser
+- Mobile-first layout with a fixed bottom navigation bar
+- Minimal hand-written CSS for predictable styling
 
 ## License
 

@@ -1,25 +1,26 @@
 /* Clean minimal stylesheet: neutral colors, basic borders, simple buttons */
 
-:root {
-  background: #ffffff;
-  color: #111111;
-  font-family: var(
-    --app-font,
-    Inter,
-    system-ui,
-    -apple-system,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial
-  );
-  padding: 12px;
+.quests-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .quests-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.floating-create {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .page-sub {
