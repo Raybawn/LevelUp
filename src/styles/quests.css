@@ -12,17 +12,6 @@
   justify-content: space-between;
 }
 
-.floating-create {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  font-size: 24px;
-  font-weight: 700;
-}
-
 .page-sub {
   margin: 4px 0 0;
   color: #666666;
@@ -74,6 +63,54 @@
   font-size: 13px;
 }
 
+/* Buttons */
+
+.btn {
+  padding: 12px 12px;
+  border-radius: 4px;
+  border: 2px solid #000000;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  font-family: inherit;
+}
+
+.btn-quest {
+  padding: 12px 12px;
+  font-size: 12px;
+}
+
+.btn-create {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: #2ebdff;
+}
+
+.btn-create svg {
+  flex-shrink: 0;
+}
+
+.btn-edit {
+  background: #ffe342;
+}
+
+.btn-delete {
+  background: #ff7070;
+}
+
 .quest-items {
   margin: 0;
   padding: 10px;
@@ -90,6 +127,9 @@
   border-radius: 4px;
   background: #f8fafc;
   border: 3px solid #000000;
+}
+.quest-item.is-disabled {
+  opacity: 0.3;
 }
 .quest-main {
   max-width: 70%;
@@ -112,21 +152,89 @@
   gap: 8px;
 }
 
-.btn-blue {
-  font-size: 20px;
-  background: #0ea5e9;
-  /* color: #fff; */
-  border-color: #0b6b8a;
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
 }
-.btn-yellow {
-  background: #f59e0b;
-  color: #041124;
-  border-color: #b97504;
+.modal-panel {
+  background: #fff;
+  color: #111827;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.288);
+  width: 380px;
+  max-width: 85%;
 }
-.btn-red {
-  background: #ef4444;
-  /* color: #fff; */
-  border-color: #c53030;
+.modal-title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.form-rows > * + * {
+  margin-top: 10px;
+}
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+.form-label {
+  color: #475569;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.form-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 16px; /* Prevent iOS Safari focus zoom */
+  line-height: 1.3;
+}
+
+/* Ensure iOS Safari does not auto-zoom smaller form controls */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toggle-checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-primary {
+  background: #3de061;
+}
+
+.btn-secondary {
+  background: #ff7070;
+}
+
+@media (max-width: 640px) {
+  .modal-panel {
+    width: 92%;
+  }
 }
 
 @media (max-width: 640px) {
@@ -138,6 +246,6 @@
   }
   .btn {
     font-size: 12px;
-    padding: 5px 6px;
+    /* padding: 5px 6px; */
   }
 }

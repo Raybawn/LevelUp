@@ -61,6 +61,19 @@ body {
   padding-bottom: 110px;
 }
 
+.tab-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+}
+
+.tab-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .page-title {
   margin: 0;
   font-size: 28px;
@@ -69,20 +82,21 @@ body {
 
 .app-nav {
   position: fixed;
-  bottom: calc(16px + env(safe-area-inset-bottom));
+  bottom: calc(30px + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  width: min(95%, 640px);
+  width: min(80%, 640px);
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border: 3px solid #000000;
   background: rgba(255, 255, 255, 0.78);
   padding: 6px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(3px);
   gap: 6px;
   z-index: 50;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .tab-button {

@@ -20,7 +20,7 @@ LevelUp
 │   ├── styles
 │   │   ├── index.css
 │   │   ├── quests.css
-│   │   └── ui-minimal.css
+│   │   └── ui-general.css
 │   └── ui
 │       ├── home
 │       │   └── Home.svelte
@@ -43,6 +43,7 @@ LevelUp
 ### Installation
 
 1. Clone the repository:
+
    ```
    git clone <repository-url>
    cd LevelUp
@@ -56,6 +57,7 @@ LevelUp
 ### Running the Application
 
 To start the development server, run:
+
 ```
 npm run dev
 ```
@@ -65,6 +67,7 @@ Vite will print the local URL (by default `http://localhost:5173`).
 ### Building for Production
 
 To create a production build, run:
+
 ```
 npm run build
 ```

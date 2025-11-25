@@ -1,5 +1,6 @@
 <script lang="ts">
-  import "../../styles/ui-minimal.css";
+  import "../../styles/quests.css";
+  import "../../styles/ui-general.css";
   import { userData } from "../../db/userData";
   import type { Quest } from "../../db/db";
 
@@ -176,7 +177,7 @@
       {/if}
 
       <div class="actions">
-        <button type="button" class="btn btn-muted" on:click={onClose}>
+        <button type="button" class="btn btn-secondary" on:click={onClose}>
           Cancel
         </button>
         <button type="submit" class="btn btn-primary">Save</button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../../styles/ui-minimal.css";
+  import "../../styles/ui-general.css";
 </script>
 
 <div class="page">

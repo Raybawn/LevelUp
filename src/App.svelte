@@ -23,19 +23,21 @@
 
 <div class="app-root">
   <div class="app-main">
-    {#if tab === "Home"}
-      <div in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
-        <Home />
-      </div>
-    {:else if tab === "Quests"}
-      <div in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
-        <QuestsTab />
-      </div>
-    {:else}
-      <div in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
-        <SettingsTab />
-      </div>
-    {/if}
+    <div class="tab-container">
+      {#if tab === "Home"}
+        <div class="tab-content" in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
+          <Home />
+        </div>
+      {:else if tab === "Quests"}
+        <div class="tab-content" in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
+          <QuestsTab />
+        </div>
+      {:else}
+        <div class="tab-content" in:fade={{ duration: 150 }} out:fade={{ duration: 120 }}>
+          <SettingsTab />
+        </div>
+      {/if}
+    </div>
   </div>
 
   <nav class="app-nav">

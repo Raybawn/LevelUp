@@ -1,0 +1,26 @@
+/* Minimal UI styles for Home, Settings, and Modal */
+
+.page {
+  display: block;
+}
+.muted {
+  color: #666666;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e6eef6;
+  padding: 12px;
+  border-radius: 12px;
+}
+.panel-small {
+  background: #ffffff;
+  border: 1px solid #eef2f7;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.space-y-3 > * + * {
+  margin-top: 12px;
+}
+
