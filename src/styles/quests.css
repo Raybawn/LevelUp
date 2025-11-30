@@ -249,3 +249,32 @@ select {
     /* padding: 5px 6px; */
   }
 }
+
+/* Dark mode adjustments: keep card backgrounds white, soften borders/text */
+@media (prefers-color-scheme: dark) {
+  .quest-card {
+    border-color: #ffffff; /* slate-700 */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.75);
+  }
+  .quest-card-header {
+    background: #202020;
+    border-bottom-color: #ffffff;
+  }
+  .header-title {
+    color: #e5e7eb;
+  }
+  .header-count {
+    color: #6b7280; /* muted on white */
+  }
+  .quest-item {
+    background: #202020;
+
+    border-color: #ffffff;
+  }
+  .quest-title {
+    color: #e5e7eb;
+  }
+  .quest-desc {
+    color: #989899;
+  }
+}

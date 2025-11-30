@@ -120,3 +120,33 @@ body {
   outline: 2px solid #0ea5e9;
   outline-offset: 2px;
 }
+
+/* Dark mode: make app background and base text dark-themed,
+   but leave quest cards/styles as-is (white backgrounds). */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #000000;
+    color: #e5e7eb;
+  }
+
+  .app-main {
+    background: #000000;
+  }
+
+  .page-title,
+  .page-sub {
+    color: inherit;
+  }
+
+  /* Navbar: soften background and adjust active contrast in dark mode */
+  .app-nav {
+    border-color: #ffffff;
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+  }
+  .tab-button.active {
+    background: #ffffff;
+    color: #000000;
+  }
+}
