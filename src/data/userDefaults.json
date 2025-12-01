@@ -1,0 +1,6 @@
+{
+  "unlockedClasses": ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"],
+  "gold": 400,
+  "minLevel": 1,
+  "maxLevel": 100
+}

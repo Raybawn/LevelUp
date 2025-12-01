@@ -2,8 +2,10 @@
   import "../../styles/quests.css";
   import "../../styles/ui-general.css";
   import CreateQuestModal from "./CreateQuestModal.svelte";
-  import { db, type Quest } from "../../db/db";
+  import { db, type Quest, userDB } from "../../db/db";
   import { classConfig } from "../../db/classConfig";
+  import questTemplatesData from "../../data/questTemplates.json";
+  import { onMount } from "svelte";
 
   type QuestCategory = Record<string, Quest[]>;
   type ClassColorMap = Record<string, { color?: string }>;
@@ -12,64 +14,24 @@
   const getCategoryColor = (category: string): string =>
     (classConfig as ClassColorMap)[category]?.color ?? fallbackColor;
 
-  const initialQuests: QuestCategory = {
-    Warrior: [
-      {
-        id: 1,
-        title: "Defeat 10 enemies",
-        description: "Defeat 10 enemies in the forest",
-        type: "Daily",
-        class: "Warrior",
-        baseXP: 100,
-        baseGold: 50,
-        enabled: true,
-        scaling: false,
-      },
-      {
-        id: 2,
-        title: "Collect 5 herbs",
-        description: "Gather herbs for potion making",
-        type: "Daily",
-        class: "Warrior",
-        baseXP: 80,
-        baseGold: 40,
-        enabled: true,
-        scaling: false,
-      },
-    ],
-    Sheep: [
-      {
-        id: 3,
-        title: "Shear 3 sheep",
-        description: "Shear sheep to collect wool",
-        type: "Daily",
-        class: "Sheep",
-        baseXP: 60,
-        baseGold: 30,
-        enabled: true,
-        scaling: false,
-      },
-    ],
-    Weekly: [
-      {
-        id: 4,
-        title: "Win 3 battles",
-        description: "Participate in battles and win",
-        type: "Weekly",
-        class: "General",
-        baseXP: 300,
-        baseGold: 150,
-        enabled: true,
-        scaling: false,
-      },
-    ],
-  };
+  const initialQuests: QuestCategory = questTemplatesData as QuestCategory;
 
   let quests: QuestCategory = JSON.parse(
     JSON.stringify(initialQuests)
   ) as QuestCategory;
   let isModalOpen = false;
   let editQuest: Quest | null = null;
+  let gold = 0;
+
+  onMount(async () => {
+    const users = await userDB.users.toArray();
+    if (users.length > 0) {
+      gold = users[0].gold;
+    } else {
+      await userDB.users.add({ id: "player", gold: 100 });
+      gold = 100;
+    }
+  });
 
   $: groupedQuests = Object.entries(quests).filter(([, questList]) => questList.length > 0);
 
@@ -117,6 +79,13 @@
     </button>
   </div>
 
+  <div class="app-status-bar">
+    <div class="status-item">
+      <span class="status-icon">💰</span>
+      <span>{gold} Gold</span>
+    </div>
+  </div>
+
   <div class="quests-list-wrap">
     {#if groupedQuests.length === 0}
       <svg
@@ -141,7 +110,7 @@
     {:else}
       {#each groupedQuests as [category, questList] (category)}
         {@const enabledCount = questList.filter((q) => q.enabled).length}
-        <section class="quest-card">
+        <section class="quest-card" style={`--class-border: ${getCategoryColor(category)};`}>
           <div class="quest-card-header">
             <div
               class="header-strip"

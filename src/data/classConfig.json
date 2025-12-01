@@ -1,0 +1,30 @@
+{
+  "Warrior": {
+    "color": "#f15e5e",
+    "description": "Strength"
+  },
+  "Ranger": {
+    "color": "#a6d39dff",
+    "description": "Endurance"
+  },
+  "Mage": {
+    "color": "#96bddfff",
+    "description": "Mindfulness"
+  },
+  "Bard": {
+    "color": "#ba97ddff",
+    "description": "Creativity"
+  },
+  "Chef": {
+    "color": "#ffb676",
+    "description": "Food and Drink"
+  },
+  "Sheep": {
+    "color": "#d0dbe2ff",
+    "description": "Sleep and Relaxation"
+  },
+  "Weekly": {
+    "color": "#c5a997ff",
+    "description": "Weekly Challenges"
+  }
+}

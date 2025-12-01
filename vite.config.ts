@@ -1,13 +1,21 @@
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { VitePWA } from "vite-plugin-pwa";
+import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
+  server: {
+    https: true,
+  },
+  preview: {
+    https: true,
+  },
   plugins: [
+    mkcert(),
     svelte(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["fonts/**/*.woff2", "apple-touch-icon-dark.png"],
+      includeAssets: ["fonts/**/*.woff2", "apple-touch-icon.png"],
       manifest: {
         name: "LevelUp",
         short_name: "LevelUp",
@@ -19,13 +27,13 @@ export default defineConfig({
         scope: "/",
         icons: [
           {
-            src: "/icon-192x192-dark.png",
+            src: "/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any maskable",
           },
           {
-            src: "/icon-512x512-dark.png",
+            src: "/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",

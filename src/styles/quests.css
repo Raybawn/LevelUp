@@ -20,6 +20,7 @@
 
 .quests-list-wrap {
   margin-top: 12px;
+  padding-bottom: 120px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -28,7 +29,7 @@
 .quest-card {
   /* background: #000000; */
   overflow: hidden;
-  border: 3px solid #000000;
+  border: 3px solid var(--class-border, #000000);
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
@@ -40,7 +41,7 @@
   justify-content: space-between;
   padding: 10px;
   background: #f8fafc;
-  border-bottom: 3px solid #000000;
+  border-bottom: 3px solid var(--class-border, #000000);
 }
 .header-strip {
   position: absolute;
@@ -126,7 +127,7 @@
   padding: 8px;
   border-radius: 4px;
   background: #f8fafc;
-  border: 3px solid #000000;
+  border: 3px solid var(--class-border, #000000);
 }
 .quest-item.is-disabled {
   opacity: 0.3;
@@ -253,12 +254,13 @@ select {
 /* Dark mode adjustments: keep card backgrounds white, soften borders/text */
 @media (prefers-color-scheme: dark) {
   .quest-card {
-    border-color: #ffffff; /* slate-700 */
+    border-color: var(--class-border, #ffffff); /* slate-700 */
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.75);
+    background: #000000;
   }
   .quest-card-header {
     background: #202020;
-    border-bottom-color: #ffffff;
+    border-bottom-color: var(--class-border, #ffffff);
   }
   .header-title {
     color: #e5e7eb;
@@ -268,8 +270,7 @@ select {
   }
   .quest-item {
     background: #202020;
-
-    border-color: #ffffff;
+    border-color: var(--class-border, #ffffff);
   }
   .quest-title {
     color: #e5e7eb;
