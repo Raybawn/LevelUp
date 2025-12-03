@@ -2,15 +2,15 @@
   import "../../styles/quests.css";
   import "../../styles/ui-general.css";
   import { userData } from "../../db/userData";
-  import type { Quest } from "../../db/db";
+  import type { QuestTemplate } from "../../db/db";
 
   export let onClose: () => void;
-  export let onSave: (quest: Quest) => void;
-  export let quest: Quest | null = null;
+  export let onSave: (quest: QuestTemplate) => void;
+  export let quest: QuestTemplate | null = null;
 
   let title = quest?.title ?? "";
   let description = quest?.description ?? "";
-  let type: Quest["type"] = quest?.type ?? "Daily";
+  let type: QuestTemplate["type"] = quest?.type ?? "Daily";
   let enabled = quest?.enabled ?? true;
   let classType = quest?.class ?? userData.unlockedClasses[0] ?? "";
   let baseXP = quest?.baseXP ?? 0;
@@ -24,7 +24,7 @@
   $: idPrefix = quest ? `quest-${quest.id}` : "new-quest";
 
   function handleSubmit() {
-    const payload: Quest = {
+    const payload: QuestTemplate = {
       id: quest?.id ?? Date.now(),
       title: title.trim(),
       description: description.trim(),
@@ -37,6 +37,8 @@
       level1Requirements: scaling ? level1Requirements.trim() : undefined,
       level100Requirements: scaling ? level100Requirements.trim() : undefined,
       requirement: !scaling ? requirement.trim() : undefined,
+      isCustom: true,
+      createdAt: quest?.createdAt ?? new Date(),
     };
 
     onSave(payload);

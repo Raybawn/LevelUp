@@ -2,65 +2,87 @@
   import "../../styles/quests.css";
   import "../../styles/ui-general.css";
   import CreateQuestModal from "./CreateQuestModal.svelte";
-  import { db, type Quest, userDB } from "../../db/db";
+  import { db, type QuestTemplate } from "../../db/db";
   import { classConfig } from "../../db/classConfig";
-  import questTemplatesData from "../../data/questTemplates.json";
+  import { ensureInitialized } from "../../db/seed";
   import { onMount } from "svelte";
 
-  type QuestCategory = Record<string, Quest[]>;
+  type QuestCategory = Record<string, QuestTemplate[]>;
   type ClassColorMap = Record<string, { color?: string }>;
   const fallbackColor = "#E5E7EB";
 
   const getCategoryColor = (category: string): string =>
     (classConfig as ClassColorMap)[category]?.color ?? fallbackColor;
 
-  const initialQuests: QuestCategory = questTemplatesData as QuestCategory;
-
-  let quests: QuestCategory = JSON.parse(
-    JSON.stringify(initialQuests)
-  ) as QuestCategory;
+  let quests: QuestCategory = {};
   let isModalOpen = false;
-  let editQuest: Quest | null = null;
+  let editQuest: QuestTemplate | null = null;
   let gold = 0;
 
   onMount(async () => {
-    const users = await userDB.users.toArray();
-    if (users.length > 0) {
-      gold = users[0].gold;
-    } else {
-      await userDB.users.add({ id: "player", gold: 100 });
-      gold = 100;
+    await ensureInitialized();
+    
+    // Load user gold
+    const user = await db.user.get("player");
+    if (user) {
+      gold = user.gold;
     }
+    
+    // Load quest templates from database
+    const templates = await db.questTemplates.toArray();
+    const grouped: QuestCategory = {};
+    
+    for (const template of templates) {
+      const category = template.type === "Weekly" ? "Weekly" : template.class;
+      if (!grouped[category]) {
+        grouped[category] = [];
+      }
+      grouped[category].push(template);
+    }
+    
+    quests = grouped;
   });
 
   $: groupedQuests = Object.entries(quests).filter(([, questList]) => questList.length > 0);
 
-  function handleSaveQuest(newQuest: Quest) {
+  async function handleSaveQuest(newQuest: QuestTemplate) {
+    // Save to database
+    const id = await db.questTemplates.add(newQuest);
+    
+    // Update local state
     const category = newQuest.type === "Weekly" ? "Weekly" : newQuest.class || "Unknown";
     const next: QuestCategory = { ...quests };
-    next[category] = [...(next[category] ?? []), newQuest];
+    next[category] = [...(next[category] ?? []), { ...newQuest, id }];
     quests = next;
     isModalOpen = false;
   }
 
-  async function handleEditQuest(updatedQuest: Quest) {
+  async function handleEditQuest(updatedQuest: QuestTemplate) {
+    // Update in database
+    await db.questTemplates.put(updatedQuest);
+    
+    // Update local state
     const newCategory = updatedQuest.type === "Weekly" ? "Weekly" : updatedQuest.class || "Unknown";
     const next: QuestCategory = {};
+    
     for (const [category, list] of Object.entries(quests)) {
       next[category] = list.filter((q) => q.id !== updatedQuest.id);
     }
+    
     next[newCategory] = [...(next[newCategory] ?? []), updatedQuest];
     quests = next;
-    await db.quests.put(updatedQuest);
     editQuest = null;
   }
 
-  async function handleDeleteQuest(questToDelete: Quest) {
+  async function handleDeleteQuest(questToDelete: QuestTemplate) {
+    // Delete from database
+    await db.questTemplates.delete(questToDelete.id!);
+    
+    // Update local state
     const category = questToDelete.type === "Weekly" ? "Weekly" : questToDelete.class || "Unknown";
     const next: QuestCategory = { ...quests };
     next[category] = (next[category] ?? []).filter((q) => q.id !== questToDelete.id);
     quests = next;
-    await db.quests.delete(questToDelete.id);
   }
 </script>
 

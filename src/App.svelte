@@ -5,6 +5,7 @@
   import QuestsTab from "./ui/quests/QuestsTab.svelte";
   import SettingsTab from "./ui/settings/SettingsTab.svelte";
   import { startMaintenance } from "./logic/maintenance";
+  import { ensureInitialized } from "./db/seed";
 
   const tabs = ["Home", "Quests", "Settings"] as const;
   type Tab = (typeof tabs)[number];
@@ -12,7 +13,8 @@
   let tab: Tab = "Home";
   let stopMaintenance: (() => void) | undefined;
 
-  onMount(() => {
+  onMount(async () => {
+    await ensureInitialized();
     stopMaintenance = startMaintenance();
   });
 

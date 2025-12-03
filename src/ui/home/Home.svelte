@@ -1,17 +1,16 @@
 <script lang="ts">
   import "../../styles/ui-general.css";
-  import { userDB } from "../../db/db";
+  import { db } from "../../db/db";
+  import { ensureInitialized } from "../../db/seed";
   import { onMount } from "svelte";
 
   let gold = 0;
 
   onMount(async () => {
-    const users = await userDB.users.toArray();
-    if (users.length > 0) {
-      gold = users[0].gold;
-    } else {
-      await userDB.users.add({ id: "player", gold: 100 });
-      gold = 100;
+    await ensureInitialized();
+    const user = await db.user.get("player");
+    if (user) {
+      gold = user.gold;
     }
   });
 </script>
