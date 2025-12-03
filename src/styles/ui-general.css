@@ -2,25 +2,43 @@
 
 .page {
   display: block;
+  padding-bottom: 96px; /* prevent bottom nav overlap */
 }
 .muted {
   color: #666666;
 }
 
 .panel {
-  background: #ffffff;
-  border: 1px solid #e6eef6;
+  background: #f8fafc;
+  border: 3px solid #000000;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 .panel-small {
-  background: #ffffff;
-  border: 1px solid #eef2f7;
+  background: #f8fafc;
+  border: 3px solid #000000;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
 .space-y-3 > * + * {
   margin-top: 12px;
 }
 
+/* Dark mode: align Home/Settings panels with quest tab visuals */
+@media (prefers-color-scheme: dark) {
+  .panel {
+    background: #202020;
+    border-color: #ffffff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.75);
+  }
+  .panel-small {
+    background: #202020;
+    border-color: #ffffff;
+  }
+  .page,
+  .muted {
+    color: #e5e7eb;
+  }
+}
