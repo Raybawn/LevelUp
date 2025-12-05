@@ -12,6 +12,7 @@ export interface User {
   lastRerollReset: Date;
   createdAt: Date;
   lastActive: Date;
+  classOrder?: string[]; // Custom order of class names
 }
 
 export interface CharacterClass {
@@ -38,9 +39,9 @@ export interface QuestTemplate {
   baseGold: number;
   enabled: boolean;
   scaling: boolean;
-  level1Requirements?: string;
-  level100Requirements?: string;
-  requirement?: string;
+  level1RequirementCount?: number;
+  level100RequirementCount?: number;
+  requirementCount?: number;
   isCustom: boolean;
   createdAt: Date;
 }
@@ -52,7 +53,9 @@ export interface QuestInstance {
   class: string;
   title: string;
   description: string;
-  requirement: string;
+  requirementCount: number;
+  progress: number;
+  progressGoal: number;
   xpReward: number;
   goldReward: number;
   status: "active" | "completed" | "failed";

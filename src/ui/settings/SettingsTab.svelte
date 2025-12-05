@@ -3,18 +3,21 @@
   import { db } from "../../db/db";
   import { ensureInitialized, clearDatabase, initializeDatabase, calculateXPToNextLevel } from "../../db/seed";
   import { generateDailyQuests, generateWeeklyQuests } from "../../logic/questGeneration";
+  import { updateClassOrder } from "../../logic/classOrdering";
   import { onMount } from "svelte";
 
   let gold = 0;
   let isResetting = false;
   let isForcing = false;
   let isPreppingWeekly = false;
+  let classOrder: string[] = [];
 
   onMount(async () => {
     await ensureInitialized();
     const user = await db.user.get("player");
     if (user) {
       gold = user.gold;
+      classOrder = user.classOrder ?? ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"];
     }
   });
 
@@ -86,6 +89,16 @@
       isPreppingWeekly = false;
     }
   }
+
+  function moveClass(index: number, direction: "up" | "down") {
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= classOrder.length) return;
+
+    const newOrder = [...classOrder];
+    [newOrder[index], newOrder[newIndex]] = [newOrder[newIndex], newOrder[index]];
+    classOrder = newOrder;
+    updateClassOrder(classOrder);
+  }
 </script>
 
 <div class="page">
@@ -95,6 +108,38 @@
     <div class="status-item">
       <span class="status-icon">💰</span>
       <span>{gold} Gold</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3 style="margin-top: 0; margin-bottom: 12px;">Class Order</h3>
+    <p style="font-size: 13px; color: #64748b; margin: 0 0 12px 0;">
+      Arrange your classes in the order you'd like them to appear.
+    </p>
+    <div class="class-order-list">
+      {#each classOrder as className, index (className)}
+        <div class="class-order-item">
+          <span class="class-name">{className}</span>
+          <div class="class-order-buttons">
+            <button
+              class="btn btn-small"
+              on:click={() => moveClass(index, "up")}
+              disabled={index === 0}
+              aria-label="Move {className} up"
+            >
+              ↑
+            </button>
+            <button
+              class="btn btn-small"
+              on:click={() => moveClass(index, "down")}
+              disabled={index === classOrder.length - 1}
+              aria-label="Move {className} down"
+            >
+              ↓
+            </button>
+          </div>
+        </div>
+      {/each}
     </div>
   </div>
 
@@ -125,3 +170,58 @@
     </button>
   </div>
 </div>
+
+<style>
+  .class-order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .class-order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  .class-name {
+    flex: 1;
+    color: #111827;
+  }
+
+  .class-order-buttons {
+    display: flex;
+    gap: 4px;
+  }
+
+  .btn-small {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .btn-small:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .class-order-item {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .class-name {
+      color: #f3f4f6;
+    }
+  }
+</style>

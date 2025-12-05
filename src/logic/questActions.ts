@@ -1,7 +1,7 @@
 import { db } from "../db/db";
 import { calculateXPToNextLevel } from "../db/seed";
 import {
-  computeRequirement,
+  computeRequirementCount,
   generateDailyQuestsForClass,
   isWeeklyUnlocked,
   generateWeeklyQuests,
@@ -27,6 +27,68 @@ export function getRerollCost(dailyRerollCount: number): number {
   }
   // After 6 rerolls, exponential: 400 * 2^(n-5)
   return 400 * Math.pow(2, dailyRerollCount - 5);
+}
+
+/**
+ * Update quest progress to a specific value
+ */
+export async function updateQuestProgress(
+  instanceId: number,
+  newProgress: number
+): Promise<void> {
+  const instance = await db.questInstances.get(instanceId);
+  if (!instance) {
+    throw new Error("Quest instance not found");
+  }
+
+  if (instance.status !== "active") {
+    throw new Error("Can only update progress on active quests");
+  }
+
+  // Clamp progress between 0 and progressGoal
+  const clampedProgress = Math.max(
+    0,
+    Math.min(newProgress, instance.progressGoal)
+  );
+
+  await db.questInstances.update(instanceId, {
+    progress: clampedProgress,
+  });
+}
+
+/**
+ * Increment quest progress by a specific amount
+ */
+export async function incrementQuestProgress(
+  instanceId: number,
+  amount: number = 1
+): Promise<void> {
+  const instance = await db.questInstances.get(instanceId);
+  if (!instance) {
+    throw new Error("Quest instance not found");
+  }
+
+  const newProgress = Math.min(
+    instance.progress + amount,
+    instance.progressGoal
+  );
+  await updateQuestProgress(instanceId, newProgress);
+}
+
+/**
+ * Decrement quest progress by a specific amount
+ */
+export async function decrementQuestProgress(
+  instanceId: number,
+  amount: number = 1
+): Promise<void> {
+  const instance = await db.questInstances.get(instanceId);
+  if (!instance) {
+    throw new Error("Quest instance not found");
+  }
+
+  const newProgress = Math.max(instance.progress - amount, 0);
+  await updateQuestProgress(instanceId, newProgress);
 }
 
 /**
@@ -77,7 +139,7 @@ export async function rerollQuest(
   const classLevel = charClass?.level ?? 1;
 
   // Calculate new requirement and rewards
-  const requirement = computeRequirement(newTemplate, classLevel);
+  const requirementCount = computeRequirementCount(newTemplate, classLevel);
   const scale = 1 + (Math.max(1, Math.min(100, classLevel)) - 1) / 200;
   const xpReward = Math.round(newTemplate.baseXP * scale);
   const goldReward = Math.round(newTemplate.baseGold * scale);
@@ -93,7 +155,9 @@ export async function rerollQuest(
     templateId: newTemplate.id!,
     title: newTemplate.title,
     description: newTemplate.description,
-    requirement,
+    requirementCount,
+    progress: 0,
+    progressGoal: requirementCount,
     xpReward,
     goldReward,
     rerollCount: instance.rerollCount + 1,
@@ -106,7 +170,7 @@ export async function rerollQuest(
 }
 
 /**
- * Complete an active quest instance
+ * Complete a quest instance
  * Awards gold and XP for Daily quests only; Weekly quests give no individual rewards
  */
 export async function completeQuest(
@@ -119,6 +183,10 @@ export async function completeQuest(
 
   if (instance.status !== "active") {
     throw new Error("Quest is not active");
+  }
+
+  if (instance.progress < instance.progressGoal) {
+    throw new Error("Quest progress not completed");
   }
 
   // Mark instance as completed

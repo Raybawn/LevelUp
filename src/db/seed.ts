@@ -41,6 +41,7 @@ export async function initializeDatabase(): Promise<void> {
           lastRerollReset: new Date(),
           createdAt: new Date(),
           lastActive: new Date(),
+          classOrder: ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"], // Default order
         });
 
         // 2. Initialize all classes
@@ -83,9 +84,15 @@ export async function initializeDatabase(): Promise<void> {
               baseGold: quest.baseGold,
               enabled: quest.enabled,
               scaling: quest.scaling,
-              level1Requirements: quest.level1Requirements,
-              level100Requirements: quest.level100Requirements,
-              requirement: quest.requirement,
+              level1RequirementCount: quest.level1Requirements
+                ? parseInt(quest.level1Requirements)
+                : undefined,
+              level100RequirementCount: quest.level100Requirements
+                ? parseInt(quest.level100Requirements)
+                : undefined,
+              requirementCount: quest.requirement
+                ? parseInt(quest.requirement)
+                : undefined,
               isCustom: false,
               createdAt: new Date(),
             });

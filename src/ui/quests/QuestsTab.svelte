@@ -5,6 +5,7 @@
   import { db, type QuestTemplate } from "../../db/db";
   import { classConfig } from "../../db/classConfig";
   import { ensureInitialized } from "../../db/seed";
+  import { getSortedClasses } from "../../logic/classOrdering";
   import { onMount } from "svelte";
 
   type QuestCategory = Record<string, QuestTemplate[]>;
@@ -21,14 +22,16 @@
   let isModalOpen = false;
   let editQuest: QuestTemplate | null = null;
   let gold = 0;
+  let classOrder: string[] = [];
 
   onMount(async () => {
     await ensureInitialized();
     
-    // Load user gold
+    // Load user gold and class order
     const user = await db.user.get("player");
     if (user) {
       gold = user.gold;
+      classOrder = user.classOrder ?? ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"];
     }
     
     // Load quest templates from database
@@ -46,7 +49,15 @@
     quests = grouped;
   });
 
-  $: groupedQuests = Object.entries(quests).filter(([, questList]) => questList.length > 0);
+  $: groupedQuests = Object.entries(quests)
+    .filter(([, questList]) => questList.length > 0)
+    .sort(([categoryA], [categoryB]) => {
+      // Weekly always last
+      if (categoryA === "Weekly") return 1;
+      if (categoryB === "Weekly") return -1;
+      // Sort by user's classOrder preference
+      return classOrder.indexOf(categoryA) - classOrder.indexOf(categoryB);
+    });
 
   async function handleSaveQuest(newQuest: QuestTemplate) {
     // Save to database
@@ -153,7 +164,7 @@
         <section class="quest-card" style={`--class-border: ${getCategoryColor(category)};`}>
           <div class="quest-card-header" style={`background: ${getCategoryColorDimmed(category)};`}>
             <div class="header-content">
-              <h3 class="header-title">{category}</h3>
+              <h3 class="header-title" style={`color: ${getCategoryColor(category)};`}>{category}</h3>
             </div>
             <span class="header-count">
               {enabledCount} / {questList.length} {questList.length === 1 ? "Quest" : "Quests"} enabled

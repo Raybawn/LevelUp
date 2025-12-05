@@ -8,7 +8,7 @@
 
 .xp-bar-bg {
   height: 20px;
-  background: #e0e0e0;
+  background: #ffffff;
   border: 2px solid #000;
   border-radius: 4px;
   overflow: hidden;
@@ -16,7 +16,7 @@
 
 .xp-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
+  /* background: linear-gradient(90deg, #4ade80, #22c55e); */
   transition: width 0.3s ease;
 }
 
@@ -41,13 +41,214 @@
   text-transform: uppercase;
 }
 
+/* Layout helpers */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Class card header */
+.class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.class-title {
+  margin: 0;
+}
+
+/* Quest slot info box */
+.quest-slot-info {
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.quest-slot-label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.quest-slot-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Quest card sections */
+.quest-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.quest-title-text {
+  font-size: 15px;
+}
+
+.quest-rewards {
+  text-align: right;
+}
+
+.quest-xp-reward {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.quest-gold-reward {
+  color: #f59e0b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.quest-description {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.quest-progress-text {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Placeholder quest slot */
+.quest-placeholder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+
+.quest-placeholder-text {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+/* Weekly bundle */
+.weekly-panel {
+  border: 3px solid #4b5563;
+  border-left: 6px solid #4b5563;
+  box-shadow: 4px 4px 0 #4b556322;
+}
+
+.weekly-completed {
+  opacity: 0.7;
+}
+
+.weekly-completed-text {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+/* Quest Progress Cards */
+.quest-progress-card {
+  padding: 16px;
+  background: #f8fafc;
+  border: 2px solid #000;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quest-progress-input {
+  width: 80px;
+  padding: 6px 10px;
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  background: #fff;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.quest-progress-input::-webkit-outer-spin-button,
+.quest-progress-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quest-progress-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.quest-progress-bar {
+  height: 12px;
+  background: #e2e8f0;
+  border: 2px solid #000;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.quest-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transition: width 0.3s ease;
+}
+
+.quest-button-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quest-button-row .btn:first-child,
+.quest-button-row .btn:last-child {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quest-button-row .btn:nth-child(2) {
+  flex: 1;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-success {
+  background: #22c55e !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #16a34a !important;
+}
+
 @media (prefers-color-scheme: dark) {
   .level-badge {
     background: rgba(255, 255, 255, 0.15);
   }
 
   .xp-bar-bg {
-    background: #333;
+    background: #000000;
     border-color: #fff;
   }
 
@@ -57,5 +258,33 @@
 
   .quest-type-badge {
     background: rgba(255, 255, 255, 0.15);
+  }
+
+  .quest-progress-card {
+    background: #000000;
+    /* border-color: #fff; */
+  }
+
+  .quest-progress-input {
+    background: #000000;
+    border-color: #1f2329;
+    color: #f3f4f6;
+  }
+
+  .quest-progress-bar {
+    background: #000000;
+    border-color: #fff;
+  }
+
+  .quest-slot-info {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .quest-description {
+    color: #9ca3af;
+  }
+
+  .quest-progress-text {
+    color: #9ca3af;
   }
 }

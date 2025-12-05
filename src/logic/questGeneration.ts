@@ -12,35 +12,28 @@ function interpolateNumber(level: number, min: number, max: number): number {
 }
 
 function parseRequirementPair(
-  level1?: string,
-  level100?: string
-): { min: number; max: number; unit?: string } | null {
-  if (!level1 || !level100) return null;
-  const num1 = parseFloat(level1);
-  const num100 = parseFloat(level100);
-  const unit =
-    level1.replace(String(num1), "").trim() ||
-    level100.replace(String(num100), "").trim() ||
-    undefined;
-  if (isNaN(num1) || isNaN(num100)) return null;
-  return { min: num1, max: num100, unit };
+  level1?: number,
+  level100?: number
+): { min: number; max: number } | null {
+  if (level1 === undefined || level100 === undefined) return null;
+  if (isNaN(level1) || isNaN(level100)) return null;
+  return { min: level1, max: level100 };
 }
 
-export function computeRequirement(
+export function computeRequirementCount(
   template: QuestTemplate,
   classLevel: number
-): string {
+): number {
   if (template.scaling) {
     const pair = parseRequirementPair(
-      template.level1Requirements,
-      template.level100Requirements
+      template.level1RequirementCount,
+      template.level100RequirementCount
     );
     if (pair) {
-      const value = interpolateNumber(classLevel, pair.min, pair.max);
-      return pair.unit ? `${value} ${pair.unit}` : String(value);
+      return interpolateNumber(classLevel, pair.min, pair.max);
     }
   }
-  return template.requirement ?? "";
+  return template.requirementCount ?? 1;
 }
 
 function rewardFromTemplate(
@@ -89,7 +82,7 @@ export async function generateDailyQuests(): Promise<void> {
 
     for (let i = 0; i < selected.length; i++) {
       const t = selected[i];
-      const requirement = computeRequirement(t, cls.level);
+      const requirementCount = computeRequirementCount(t, cls.level);
       const reward = rewardFromTemplate(t, cls.level);
       const instance: QuestInstance = {
         templateId: t.id!,
@@ -97,7 +90,9 @@ export async function generateDailyQuests(): Promise<void> {
         class: cls.id,
         title: t.title,
         description: t.description,
-        requirement,
+        requirementCount,
+        progress: 0,
+        progressGoal: requirementCount,
         xpReward: reward.xp,
         goldReward: reward.gold,
         status: "active",
@@ -145,7 +140,7 @@ export async function generateDailyQuestsForClass(
 
   for (let i = 0; i < selected.length; i++) {
     const t = selected[i];
-    const requirement = computeRequirement(t, cls.level);
+    const requirementCount = computeRequirementCount(t, cls.level);
     const reward = rewardFromTemplate(t, cls.level);
     await db.questInstances.add({
       templateId: t.id!,
@@ -153,7 +148,9 @@ export async function generateDailyQuestsForClass(
       class: cls.id,
       title: t.title,
       description: t.description,
-      requirement,
+      requirementCount,
+      progress: 0,
+      progressGoal: requirementCount,
       xpReward: reward.xp,
       goldReward: reward.gold,
       status: "active",
@@ -203,7 +200,7 @@ export async function generateWeeklyQuests(): Promise<void> {
 
   for (let i = 0; i < picked.length; i++) {
     const t = picked[i];
-    const requirement = computeRequirement(t, avgLevel);
+    const requirementCount = computeRequirementCount(t, avgLevel);
     const reward = rewardFromTemplate(t, avgLevel);
     const instance: QuestInstance = {
       templateId: t.id!,
@@ -211,7 +208,9 @@ export async function generateWeeklyQuests(): Promise<void> {
       class: t.class, // Keep for display purposes only
       title: t.title,
       description: t.description,
-      requirement,
+      requirementCount,
+      progress: 0,
+      progressGoal: requirementCount,
       xpReward: reward.xp,
       goldReward: reward.gold,
       status: "active",

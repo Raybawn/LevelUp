@@ -17,9 +17,9 @@
   let baseXP = quest?.baseXP ?? 0;
   let baseGold = quest?.baseGold ?? 0;
   let scaling = quest?.scaling ?? false;
-  let level1Requirements = quest?.level1Requirements ?? "";
-  let level100Requirements = quest?.level100Requirements ?? "";
-  let requirement = quest?.requirement ?? "";
+  let level1RequirementCount = quest?.level1RequirementCount ?? 1;
+  let level100RequirementCount = quest?.level100RequirementCount ?? 100;
+  let requirementCount = quest?.requirementCount ?? 1;
   let idPrefix = quest ? `quest-${quest.id}` : "new-quest";
 
   $: idPrefix = quest ? `quest-${quest.id}` : "new-quest";
@@ -35,9 +35,9 @@
       baseXP,
       baseGold,
       scaling,
-      level1Requirements: scaling ? level1Requirements.trim() : undefined,
-      level100Requirements: scaling ? level100Requirements.trim() : undefined,
-      requirement: !scaling ? requirement.trim() : undefined,
+      level1RequirementCount: scaling ? level1RequirementCount : undefined,
+      level100RequirementCount: scaling ? level100RequirementCount : undefined,
+      requirementCount: !scaling ? requirementCount : undefined,
       isCustom: true,
       createdAt: quest?.createdAt ?? new Date(),
     };
@@ -145,36 +145,39 @@
       {#if scaling}
         <div class="form-row">
           <label class="form-label" for={`${idPrefix}-req-level-1`}>
-            Level 1 Requirements:
+            Level 1 Requirement Count:
           </label>
           <input
             class="form-input"
-            type="text"
+            type="number"
+            min="1"
             id={`${idPrefix}-req-level-1`}
-            bind:value={level1Requirements}
+            bind:value={level1RequirementCount}
           />
         </div>
         <div class="form-row">
           <label class="form-label" for={`${idPrefix}-req-level-100`}>
-            Level 100 Requirements:
+            Level 100 Requirement Count:
           </label>
           <input
             class="form-input"
-            type="text"
+            type="number"
+            min="1"
             id={`${idPrefix}-req-level-100`}
-            bind:value={level100Requirements}
+            bind:value={level100RequirementCount}
           />
         </div>
       {:else}
         <div class="form-row">
           <label class="form-label" for={`${idPrefix}-requirement`}>
-            Requirement:
+            Requirement Count:
           </label>
           <input
             class="form-input"
-            type="text"
+            type="number"
+            min="1"
             id={`${idPrefix}-requirement`}
-            bind:value={requirement}
+            bind:value={requirementCount}
           />
         </div>
       {/if}
