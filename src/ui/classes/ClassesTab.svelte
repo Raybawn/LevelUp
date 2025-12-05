@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { db, type CharacterClass } from "../../db/db";
   import { unlockClass, unlockQuestSlot } from "../../logic/questActions";
+  import { classConfig } from "../../db/classConfig";
 
   let classes: CharacterClass[] = [];
   let gold = 0;
@@ -53,15 +54,7 @@
   }
 
   function getClassColor(className: string): string {
-    const colors: Record<string, string> = {
-      Warrior: "#c41e3a",
-      Ranger: "#aad372",
-      Mage: "#3fc7eb",
-      Cleric: "#f48cba",
-      Rogue: "#fff468",
-      Paladin: "#f48cba",
-    };
-    return colors[className] ?? "#888";
+    return (classConfig as any)[className]?.color ?? "#888";
   }
 </script>
 

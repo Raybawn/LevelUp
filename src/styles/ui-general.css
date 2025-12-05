@@ -1,9 +1,17 @@
 /* Minimal UI styles for Home, Settings, and Modal */
 
+/* Tab container with bottom navigation clearance */
 .page {
   display: block;
   padding-bottom: 96px; /* prevent bottom nav overlap */
 }
+
+.page-sub {
+  margin: 4px 0 0;
+  color: #666666;
+  font-size: 13px;
+}
+
 .muted {
   color: #666666;
 }

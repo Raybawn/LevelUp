@@ -1,9 +1,11 @@
 <script lang="ts">
+  import "../../styles/home.css";
   import "../../styles/ui-general.css";
   import { db, type CharacterClass } from "../../db/db";
   import { ensureInitialized } from "../../db/seed";
   import { completeQuest, rerollQuest, getRerollCost, unlockClass, unlockQuestSlot, collectWeeklyReward } from "../../logic/questActions";
   import { onMount } from "svelte";
+  import classConfig from "../../data/classConfig.json";
 
   let gold = 0;
   let rerollCost = 10;
@@ -133,15 +135,11 @@
   }
 
   function getClassColor(className: string): string {
-    const colors: Record<string, string> = {
-      Warrior: "#c41e3a",
-      Ranger: "#aad372",
-      Mage: "#3fc7eb",
-      Cleric: "#f48cba",
-      Rogue: "#fff468",
-      Paladin: "#f48cba",
-    };
-    return colors[className] ?? "#888";
+    return (classConfig as any)[className]?.color ?? "#888";
+  }
+
+  function getClassColorDimmed(className: string): string {
+    return (classConfig as any)[className]?.colorDimmed ?? "#88888820";
   }
 </script>
 
@@ -157,11 +155,12 @@
 
   {#each classes as charClass}
     {@const color = getClassColor(charClass.name)}
+    {@const colorDimmed = getClassColorDimmed(charClass.name)}
     {@const borderColor = charClass.isUnlocked ? color : "#888"}
     {@const xpPercent = getXPPercentage(charClass)}
     {@const classQuests = questsByClass[charClass.name] || []}
     
-    <div class="panel" style="border:3px solid {borderColor}; border-left: 6px solid {borderColor}; box-shadow: 4px 4px 0 {borderColor}22">
+    <div class="panel" style="background:{colorDimmed}; border:3px solid {borderColor}; box-shadow: 4px 4px 0 {borderColor}22">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <h3 style="margin:0;color:{color}">{charClass.name}</h3>
         {#if !charClass.isUnlocked}
@@ -178,7 +177,7 @@
       </div>
 
       {#if !charClass.isUnlocked}
-        <div class="muted">Unlock this class to start earning quests!</div>
+        <div class="muted">Unlock this class to start leveling!</div>
       {:else}
         <!-- XP Progress Bar -->
         <div style="margin-bottom:12px">
@@ -320,66 +319,4 @@
   {/if}
 </div>
 
-<style>
-  .level-badge {
-    font-size: 14px;
-    font-weight: 600;
-    padding: 4px 10px;
-    background: rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-  }
 
-  .xp-bar-bg {
-    height: 20px;
-    background: #e0e0e0;
-    border: 2px solid #000;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .xp-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4ade80, #22c55e);
-    transition: width 0.3s ease;
-  }
-
-  .xp-text {
-    margin-top: 4px;
-    font-size: 13px;
-    color: #555;
-    text-align: center;
-  }
-
-  .btn-small {
-    padding: 4px 8px;
-    font-size: 12px;
-  }
-
-  .quest-type-badge {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 6px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    text-transform: uppercase;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .level-badge {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .xp-bar-bg {
-      background: #333;
-      border-color: #fff;
-    }
-
-    .xp-text {
-      color: #aaa;
-    }
-
-    .quest-type-badge {
-      background: rgba(255, 255, 255, 0.15);
-    }
-  }
-</style>
