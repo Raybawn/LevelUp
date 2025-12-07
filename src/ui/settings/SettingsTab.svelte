@@ -4,9 +4,11 @@
   import { ensureInitialized, clearDatabase, initializeDatabase, calculateXPToNextLevel } from "../../db/seed";
   import { generateDailyQuests, generateWeeklyQuests } from "../../logic/questGeneration";
   import { updateClassOrder } from "../../logic/classOrdering";
+  import { getRerollCost } from "../../logic/questActions";
   import { onMount } from "svelte";
 
   let gold = 0;
+  let rerollCost = 10;
   let isResetting = false;
   let isForcing = false;
   let isPreppingWeekly = false;
@@ -17,6 +19,7 @@
     const user = await db.user.get("player");
     if (user) {
       gold = user.gold;
+      rerollCost = getRerollCost(user.dailyRerollCount);
       classOrder = user.classOrder ?? ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"];
     }
   });
@@ -102,12 +105,15 @@
 </script>
 
 <div class="page">
-  <h1 class="page-title" style="margin-bottom: 12px">Settings</h1>
+  <h1 class="page-title">Settings</h1>
+  <p class="page-sub">Change different options here.</p>
   
   <div class="app-status-bar">
     <div class="status-item">
-      <span class="status-icon">💰</span>
-      <span>{gold} Gold</span>
+      <span>Gold: <span style="color:#f59e0b;font-weight:700">{gold}</span></span>
+    </div>
+    <div class="status-item">
+      <span>Reroll Cost: <span style="color:#f59e0b;font-weight:700">{rerollCost}g</span></span>
     </div>
   </div>
 

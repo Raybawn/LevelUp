@@ -6,6 +6,7 @@
   import { classConfig } from "../../db/classConfig";
   import { ensureInitialized } from "../../db/seed";
   import { getSortedClasses } from "../../logic/classOrdering";
+  import { getRerollCost } from "../../logic/questActions";
   import { onMount } from "svelte";
 
   type QuestCategory = Record<string, QuestTemplate[]>;
@@ -22,6 +23,7 @@
   let isModalOpen = false;
   let editQuest: QuestTemplate | null = null;
   let gold = 0;
+  let rerollCost = 10;
   let classOrder: string[] = [];
 
   onMount(async () => {
@@ -31,6 +33,7 @@
     const user = await db.user.get("player");
     if (user) {
       gold = user.gold;
+      rerollCost = getRerollCost(user.dailyRerollCount);
       classOrder = user.classOrder ?? ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"];
     }
     
@@ -132,8 +135,10 @@
 
   <div class="app-status-bar">
     <div class="status-item">
-      <span class="status-icon">💰</span>
-      <span>{gold} Gold</span>
+      <span>Gold: <span style="color:#f59e0b;font-weight:700">{gold}</span></span>
+    </div>
+    <div class="status-item">
+      <span>Reroll Cost: <span style="color:#f59e0b;font-weight:700">{rerollCost}g</span></span>
     </div>
   </div>
 
@@ -171,7 +176,7 @@
             </span>
           </div>
 
-          <ul class="quest-items">
+          <ul class="quest-items"  style={`background: ${getCategoryColorDimmed(category)};`}>
             {#each questList as quest (quest.id)}
               <li
                 class="quest-item"

@@ -86,13 +86,13 @@ export async function initializeDatabase(): Promise<void> {
               scaling: quest.scaling,
               level1RequirementCount: quest.level1Requirements
                 ? parseInt(quest.level1Requirements)
-                : undefined,
+                : 1,
               level100RequirementCount: quest.level100Requirements
                 ? parseInt(quest.level100Requirements)
-                : undefined,
+                : 1,
               requirementCount: quest.requirement
                 ? parseInt(quest.requirement)
-                : undefined,
+                : 1,
               isCustom: false,
               createdAt: new Date(),
             });

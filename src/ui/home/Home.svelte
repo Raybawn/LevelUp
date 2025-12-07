@@ -18,6 +18,8 @@
   const SLOT_LEVEL_REQUIREMENTS = { slot3: 5, slot4: 10, slot5: 15 };
   let weeklyBundle: Array<{ id: number; title: string; description: string; requirementCount: number; progress: number; progressGoal: number; xpReward: number; goldReward: number; status: string }> = [];
 
+  let lastLoadDay = new Date().getDate();
+
   async function loadData() {
     const user = await db.user.get("player");
     if (user) {
@@ -69,11 +71,25 @@
         goldReward: w.goldReward,
         status: w.status 
       }));
+
+    lastLoadDay = new Date().getDate();
   }
 
   onMount(async () => {
     await ensureInitialized();
     await loadData();
+
+    // Periodically check if day has changed and reload data
+    const dayCheckInterval = setInterval(async () => {
+      const currentDay = new Date().getDate();
+      if (currentDay !== lastLoadDay) {
+        await loadData();
+      }
+    }, 60000); // Check every minute
+
+    return () => {
+      clearInterval(dayCheckInterval);
+    };
   });
 
   async function handleComplete(questId: number) {
@@ -205,6 +221,7 @@
 
 <div class="space-y-3 page">
   <h1 class="page-title">LevelUp</h1>
+  <p class="page-sub">Complete Quests and Level up!</p>
   
   <div class="app-status-bar">
     <div class="status-item">
