@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../../styles/general.css";
   import { onMount } from "svelte";
   import { db, type CharacterClass } from "../../db/db";
   import { unlockClass, unlockQuestSlot } from "../../logic/questActions";
@@ -71,7 +72,7 @@
       
       <div class="class-card" style="border-left: 4px solid {color}">
         <div class="class-header">
-          <h3 style="margin:0;color:{color}">{charClass.name}</h3>
+          <h3 class="class-title" style="color:{color}">{charClass.name}</h3>
           {#if !charClass.isUnlocked}
             <span class="locked-badge">🔒 Locked</span>
           {:else}
@@ -80,7 +81,7 @@
         </div>
 
         {#if !charClass.isUnlocked}
-          <div style="margin-top:12px">
+          <div class="section-spacing">
             <button 
               class="btn btn-primary" 
               disabled={gold < CLASS_UNLOCK_COST}

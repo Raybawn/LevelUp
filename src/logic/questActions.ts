@@ -124,8 +124,22 @@ export async function rerollQuest(
     .and((t) => t.enabled)
     .toArray();
 
-  // Exclude current template
-  const available = templates.filter((t) => t.id !== instance.templateId);
+  // Get all non-failed quest instances for this class today to exclude their templates
+  const todayQuests = await db.questInstances
+    .where({ type: instance.type, class: instance.class })
+    .toArray();
+
+  // Get template IDs that are already assigned/completed today (exclude current one being rerolled)
+  const usedTemplateIds = new Set(
+    todayQuests
+      .filter((q) => q.id !== instanceId && q.status !== "failed")
+      .map((q) => q.templateId)
+  );
+
+  // Exclude current template and any already-used templates from today
+  const available = templates.filter(
+    (t) => t.id !== instance.templateId && !usedTemplateIds.has(t.id!)
+  );
 
   if (available.length === 0) {
     throw new Error("No alternative quests available to reroll to");

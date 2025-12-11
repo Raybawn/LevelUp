@@ -1,63 +1,38 @@
-/* Minimal UI styles for Home, Settings, and Modal */
+/* ===========================
+   UI-GENERAL.CSS - General components
+   Kept for backwards compatibility with .panel and .panel-small
+   =========================== */
 
-/* Tab container with bottom navigation clearance */
-.page {
-  display: block;
-  padding-bottom: 96px; /* prevent bottom nav overlap */
-}
-
-.page-sub {
-  margin: 4px 0 0;
-  color: #666666;
-  font-size: 13px;
-}
-
-.muted {
-  color: #666666;
-}
-
+/* Legacy panel classes - use .card-container instead */
 .panel {
   background: #f8fafc;
   border: 3px solid #000000;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
+
 .panel-small {
   background: #f8fafc;
   border: 3px solid #000000;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 6px;
 }
 
-.space-y-3 > * + * {
-  /* margin-top: 12px; */
+.muted {
+  color: #64748b;
 }
 
-.app-status-bar {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.status-item {
-  flex: 1;
-}
-
-/* Dark mode: align Home/Settings panels with quest tab visuals */
+/* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
-  .panel {
+  .panel,
+  .panel-small {
     background: #202020;
     border-color: #ffffff;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.75);
   }
-  .panel-small {
-    background: #202020;
-    border-color: #ffffff;
-  }
-  .page,
+
   .muted {
-    color: #e5e7eb;
+    color: #9ca3af;
   }
 }

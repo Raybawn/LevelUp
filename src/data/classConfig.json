@@ -1,36 +1,43 @@
 {
   "Warrior": {
-    "color": "#f15e5e",
-    "colorDimmed": "#f15e5e20",
+    "color": "#ff3030",
+    "colorDark": "#f15e5e",
+    "colorDimmed": "#ff303020",
     "description": "Strength"
   },
   "Ranger": {
-    "color": "#a6d39dff",
-    "colorDimmed": "#a6d39d20",
+    "color": "#6ea862",
+    "colorDark": "#a6d39d",
+    "colorDimmed": "#6ea86220",
     "description": "Endurance"
   },
   "Mage": {
-    "color": "#96bddfff",
-    "colorDimmed": "#96bddf20",
+    "color": "#59a1df",
+    "colorDark": "#96bddf",
+    "colorDimmed": "#59a1df20",
     "description": "Mindfulness"
   },
   "Bard": {
-    "color": "#ba97ddff",
-    "colorDimmed": "#ba97dd20",
+    "color": "#b58ddd",
+    "colorDark": "#ba97dd",
+    "colorDimmed": "#b58ddd20",
     "description": "Creativity"
   },
   "Chef": {
-    "color": "#ffb676",
-    "colorDimmed": "#ffb67620",
+    "color": "#ffa454",
+    "colorDark": "#ffb676",
+    "colorDimmed": "#ffa45420",
     "description": "Food and Drink"
   },
   "Sheep": {
-    "color": "#d0dbe2ff",
-    "colorDimmed": "#d0dbe220",
+    "color": "#b8bfc7",
+    "colorDark": "#d0dbe2",
+    "colorDimmed": "#b8bfc720",
     "description": "Sleep and Relaxation"
   },
   "Weekly": {
-    "color": "#c5a997ff",
+    "color": "#c5a997",
+    "colorDark": "#8a755e",
     "colorDimmed": "#c5a99720",
     "description": "Weekly Challenges"
   }

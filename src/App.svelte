@@ -6,6 +6,7 @@
   import SettingsTab from "./ui/settings/SettingsTab.svelte";
   import { startMaintenance } from "./logic/maintenance";
   import { ensureInitialized } from "./db/seed";
+  import { classConfig } from "./db/classConfig";
 
   const tabs = ["Home", "Quests", "Settings"] as const;
   type Tab = (typeof tabs)[number];
@@ -13,7 +14,18 @@
   let tab: Tab = "Home";
   let stopMaintenance: (() => void) | undefined;
 
+  function injectColorVariables() {
+    const root = document.documentElement;
+    Object.entries(classConfig).forEach(([className, config]: [string, any]) => {
+      const baseName = className.toLowerCase();
+      root.style.setProperty(`--color-${baseName}`, config.color);
+      root.style.setProperty(`--color-${baseName}-dark`, config.colorDark);
+      root.style.setProperty(`--color-${baseName}-dimmed`, config.colorDimmed);
+    });
+  }
+
   onMount(async () => {
+    injectColorVariables();
     await ensureInitialized();
     stopMaintenance = startMaintenance();
   });

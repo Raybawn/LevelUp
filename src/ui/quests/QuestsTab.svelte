@@ -1,6 +1,6 @@
 <script lang="ts">
+  import "../../styles/general.css";
   import "../../styles/quests.css";
-  import "../../styles/ui-general.css";
   import CreateQuestModal from "./CreateQuestModal.svelte";
   import { db, type QuestTemplate } from "../../db/db";
   import { classConfig } from "../../db/classConfig";
@@ -135,10 +135,10 @@
 
   <div class="app-status-bar">
     <div class="status-item">
-      <span>Gold: <span style="color:#f59e0b;font-weight:700">{gold}</span></span>
+      <span>Gold: <span class="text-golden">{gold}</span></span>
     </div>
     <div class="status-item">
-      <span>Reroll Cost: <span style="color:#f59e0b;font-weight:700">{rerollCost}g</span></span>
+      <span>Reroll Cost: <span class="text-golden">{rerollCost}g</span></span>
     </div>
   </div>
 
@@ -166,8 +166,9 @@
     {:else}
       {#each groupedQuests as [category, questList] (category)}
         {@const enabledCount = questList.filter((q) => q.enabled).length}
-        <section class="quest-card" style={`--class-border: ${getCategoryColor(category)};`}>
-          <div class="quest-card-header" style={`background: ${getCategoryColorDimmed(category)};`}>
+        {@const borderColor = getCategoryColor(category)}
+        <section class="card-container" style={`background: ${getCategoryColorDimmed(category)}; --class-border: ${getCategoryColor(category)}; border-color: ${getCategoryColor(category)}; box-shadow: 0 4px 12px ${borderColor}80`}>
+          <div class="quest-card-header">
             <div class="header-content">
               <h3 class="header-title" style={`color: ${getCategoryColor(category)};`}>{category}</h3>
             </div>
@@ -176,7 +177,8 @@
             </span>
           </div>
 
-          <ul class="quest-items"  style={`background: ${getCategoryColorDimmed(category)};`}>
+          <div style={`padding: 0 12px;`}>
+            <ul class="quest-items"  style={`background: transparent;`}>
             {#each questList as quest (quest.id)}
               <li
                 class="quest-item"
@@ -205,6 +207,7 @@
               </li>
             {/each}
           </ul>
+        </div>
         </section>
       {/each}
     {/if}

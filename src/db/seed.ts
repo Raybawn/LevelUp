@@ -7,11 +7,11 @@ import classConfigData from "../data/classConfig.json";
 let initPromise: Promise<void> | null = null;
 
 /**
- * Calculate XP required for next level using slight exponential curve
+ * Calculate XP required for next level using linear scaling
+ * Lvl 1->2: 100 XP, Lvl 2->3: 200 XP, Lvl 3->4: 300 XP, etc.
  */
 export function calculateXPToNextLevel(level: number): number {
-  const baseXP = 100;
-  return Math.floor(baseXP * Math.pow(level, 1.2));
+  return level * 100;
 }
 
 /**

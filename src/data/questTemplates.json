@@ -6,12 +6,12 @@
       "description": "Complete push-ups to build upper body strength",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "2",
-      "level100Requirements": "150"
+      "level1Requirements": 2,
+      "level100Requirements": 150
     },
     {
       "id": 2,
@@ -19,12 +19,12 @@
       "description": "Do squats to strengthen your legs",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "2",
-      "level100Requirements": "150"
+      "level1Requirements": 2,
+      "level100Requirements": 150
     },
     {
       "id": 3,
@@ -32,12 +32,12 @@
       "description": "Strengthen your core with crunches",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "2",
-      "level100Requirements": "150"
+      "level1Requirements": 2,
+      "level100Requirements": 150
     },
     {
       "id": 4,
@@ -45,12 +45,12 @@
       "description": "Strengthen your lower abs with leg raises",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "2",
-      "level100Requirements": "150"
+      "level1Requirements": 2,
+      "level100Requirements": 150
     },
     {
       "id": 5,
@@ -58,12 +58,12 @@
       "description": "Strengthen your calves with calf raises",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "5",
-      "level100Requirements": "200"
+      "level1Requirements": 5,
+      "level100Requirements": 200
     },
     {
       "id": 6,
@@ -71,12 +71,12 @@
       "description": "Hold a plank position to build core strength",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "10 seconds",
-      "level100Requirements": "300 seconds"
+      "level1Requirements": 10,
+      "level100Requirements": 300
     },
     {
       "id": 7,
@@ -84,12 +84,12 @@
       "description": "Strengthen your outer thighs with side leg raises",
       "type": "Daily",
       "class": "Warrior",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "5",
-      "level100Requirements": "200"
+      "level1Requirements": 5,
+      "level100Requirements": 200
     }
   ],
   "Ranger": [
@@ -99,12 +99,12 @@
       "description": "Explore the world on foot to build endurance",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "200 steps",
-      "level100Requirements": "10000 steps"
+      "level1Requirements": 200,
+      "level100Requirements": 10000
     },
     {
       "id": 9,
@@ -112,12 +112,12 @@
       "description": "Scale heights to improve your climbing stamina",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "2 flights",
-      "level100Requirements": "20 flights"
+      "level1Requirements": 2,
+      "level100Requirements": 20
     },
     {
       "id": 10,
@@ -125,11 +125,12 @@
       "description": "Improve flexibility with a good stretch",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Complete stretching routine"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 11,
@@ -137,11 +138,12 @@
       "description": "Walk in place for 30 seconds to improve your cardiovascular fitness",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "March in place for 30 seconds"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 12,
@@ -149,11 +151,12 @@
       "description": "Stand up and engage in a brief activity for 1 minute to refresh your mind",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Take a 1 minute active break"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 13,
@@ -161,12 +164,12 @@
       "description": "Practice balancing on one leg to improve stability",
       "type": "Daily",
       "class": "Ranger",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": true,
-      "level1Requirements": "10 seconds",
-      "level100Requirements": "120 seconds"
+      "level1Requirements": 10,
+      "level100Requirements": 120
     }
   ],
   "Mage": [
@@ -176,11 +179,12 @@
       "description": "Record your thoughts to enhance mental clarity",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Write in your journal"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 15,
@@ -188,11 +192,12 @@
       "description": "Practice mindful breathing to center your mind",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Complete breathing exercise"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 16,
@@ -200,11 +205,12 @@
       "description": "Notice 1 sound, 1 smell and 1 sight",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Observe 1 sound, 1 smell, 1 sight"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 17,
@@ -212,11 +218,12 @@
       "description": "Reflect on 1 positive moment in your life",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Reflect on 1 positive moment"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 18,
@@ -224,11 +231,12 @@
       "description": "Immerse yourself in a book or article that brings you joy",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Read something enjoyable"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 19,
@@ -236,11 +244,12 @@
       "description": "Plan your tasks for the next day",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Plan tomorrow's tasks"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 20,
@@ -248,11 +257,12 @@
       "description": "Reflect on your day and note what you're thankful for",
       "type": "Daily",
       "class": "Mage",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Write down what you're grateful for"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     }
   ],
   "Chef": [
@@ -262,11 +272,12 @@
       "description": "Stay hydrated to maintain your culinary energy",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Drink water throughout the day"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 22,
@@ -274,11 +285,12 @@
       "description": "Prepare and enjoy a nutritious feast for your body",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Prepare a nutritious meal"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 23,
@@ -286,11 +298,12 @@
       "description": "Fuel your body with a healthy breakfast or prep for tomorrow's meal",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Eat or prep a healthy breakfast"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 24,
@@ -298,11 +311,12 @@
       "description": "Incorporate more fruits and vegetables into your meals",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Eat fruits and vegetables"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 25,
@@ -310,11 +324,12 @@
       "description": "Focus on your meal without distractions",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 150,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Eat mindfully without distractions"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 26,
@@ -322,11 +337,12 @@
       "description": "Brew a delightful cup of tea to enjoy",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Enjoy a cup of tea"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 27,
@@ -334,11 +350,12 @@
       "description": "Indulge in a small treat as a reward for your efforts",
       "type": "Daily",
       "class": "Chef",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Enjoy a small treat"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     }
   ],
   "Sheep": [
@@ -348,11 +365,12 @@
       "description": "Rest early to restore your vitality for tomorrow",
       "type": "Daily",
       "class": "Sheep",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Go to bed early"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 29,
@@ -360,11 +378,12 @@
       "description": "Take time to unwind and recharge your spirit",
       "type": "Daily",
       "class": "Sheep",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Take time to relax"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 30,
@@ -372,11 +391,12 @@
       "description": "Enjoy soothing tunes to relax your mind",
       "type": "Daily",
       "class": "Sheep",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Listen to relaxing music"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 31,
@@ -384,11 +404,12 @@
       "description": "Engage in gentle stretches to relax your body",
       "type": "Daily",
       "class": "Sheep",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Do bedtime stretches"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     },
     {
       "id": 32,
@@ -396,11 +417,12 @@
       "description": "Reflect on your day and note what you're thankful for",
       "type": "Daily",
       "class": "Sheep",
-      "baseXP": 50,
+      "baseXP": 100,
       "baseGold": 5,
       "enabled": true,
       "scaling": false,
-      "requirement": "Reflect and be grateful"
+      "level1Requirements": 1,
+      "level100Requirements": 1
     }
   ],
   "Bard": [],

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../../styles/general.css";
   import "../../styles/ui-general.css";
   import { db } from "../../db/db";
   import { ensureInitialized, clearDatabase, initializeDatabase, calculateXPToNextLevel } from "../../db/seed";
@@ -6,6 +7,7 @@
   import { updateClassOrder } from "../../logic/classOrdering";
   import { getRerollCost } from "../../logic/questActions";
   import { onMount } from "svelte";
+  import classConfig from "../../data/classConfig.json";
 
   let gold = 0;
   let rerollCost = 10;
@@ -102,6 +104,10 @@
     classOrder = newOrder;
     updateClassOrder(classOrder);
   }
+
+  function getClassColor(className: string): string {
+    return (classConfig as any)[className]?.color ?? "#888";
+  }
 </script>
 
 <div class="page">
@@ -110,22 +116,25 @@
   
   <div class="app-status-bar">
     <div class="status-item">
-      <span>Gold: <span style="color:#f59e0b;font-weight:700">{gold}</span></span>
+      <span>Gold: <span class="text-golden">{gold}</span></span>
     </div>
     <div class="status-item">
-      <span>Reroll Cost: <span style="color:#f59e0b;font-weight:700">{rerollCost}g</span></span>
+      <span>Reroll Cost: <span class="text-golden">{rerollCost}g</span></span>
     </div>
   </div>
 
-  <div class="panel">
-    <h3 style="margin-top: 0; margin-bottom: 12px;">Class Order</h3>
-    <p style="font-size: 13px; color: #64748b; margin: 0 0 12px 0;">
-      Arrange your classes in the order you'd like them to appear.
-    </p>
-    <div class="class-order-list">
+  <div class="card-container" style="margin-bottom: 20px;">
+    <div style="padding: 12px 12px; margin-bottom: 12px;">
+      <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Class Order</h3>
+    </div>
+    <div style="padding: 0 12px; margin-bottom: 12px;">
+      <p class="text-small text-muted" style="margin: 0 0 12px 0;">
+        Arrange your classes in the order you'd like them to appear.
+      </p>
+      <div class="class-order-list">
       {#each classOrder as className, index (className)}
-        <div class="class-order-item">
-          <span class="class-name">{className}</span>
+        <div class="class-order-item" style="background: {getClassColor(className)}20; border-color: {getClassColor(className)};">
+          <span class="class-name" style="color: {getClassColor(className)};">{className}</span>
           <div class="class-order-buttons">
             <button
               class="btn btn-small"
@@ -146,34 +155,39 @@
           </div>
         </div>
       {/each}
+      </div>
     </div>
   </div>
 
-  <div class="panel">
-    <h3 style="margin-top: 0; margin-bottom: 8px;">Database</h3>
-    <button 
-      class="btn btn-secondary" 
-      on:click={handleResetDatabase}
-      disabled={isResetting}
-    >
-      {isResetting ? "Resetting..." : "Reset Database (Testing)"}
-    </button>
-    <div style="height:8px"></div>
-    <button
-      class="btn btn-primary"
-      on:click={handleForceGenerate}
-      disabled={isForcing}
-    >
-      {isForcing ? "Generating..." : "Force Generate Daily/Weekly"}
-    </button>
-    <div style="height:8px"></div>
-    <button
-      class="btn btn-secondary"
-      on:click={handlePrepWeeklyUnlockTest}
-      disabled={isPreppingWeekly}
-    >
-      {isPreppingWeekly ? "Preparing..." : "Prep Weekly Unlock Test"}
-    </button>
+  <div class="card-container" style="margin-bottom: 20px;">
+    <div style="padding: 12px 12px; margin-bottom: 12px;">
+      <h3 style="margin: 0; font-size: 18px; font-weight: 600;">Database</h3>
+    </div>
+    <div style="padding: 0 12px; margin-bottom: 12px;">
+      <button 
+        class="btn btn-secondary" 
+        on:click={handleResetDatabase}
+        disabled={isResetting}
+      >
+        {isResetting ? "Resetting..." : "Reset Database (Testing)"}
+      </button>
+      <div class="spacing-8"></div>
+      <button
+        class="btn btn-primary"
+        on:click={handleForceGenerate}
+        disabled={isForcing}
+      >
+        {isForcing ? "Generating..." : "Force Generate Daily/Weekly"}
+      </button>
+      <div class="spacing-8"></div>
+      <button
+        class="btn btn-secondary"
+        on:click={handlePrepWeeklyUnlockTest}
+        disabled={isPreppingWeekly}
+      >
+        {isPreppingWeekly ? "Preparing..." : "Prep Weekly Unlock Test"}
+      </button>
+    </div>
   </div>
 </div>
 
@@ -190,7 +204,7 @@
     justify-content: space-between;
     padding: 12px;
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 2px solid #e2e8f0;
     border-radius: 4px;
     font-weight: 500;
   }

@@ -27,8 +27,8 @@ body {
 
 body {
   margin: 0;
-  font-family: var(--app-font);
-  font-size: 16px;
+  /* font-family: var(--app-font); */
+  /* font-size: 16px; */
   background: #ffffff;
   color: #111827;
 }
@@ -37,123 +37,15 @@ body {
   min-height: 100%;
 }
 
-@font-face {
+/* @font-face {
   font-family: "Jersey 25";
   src: url("/fonts/Jersey25-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-}
-
-.app-root {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-  max-width: 640px;
-  width: 100%;
-  padding: 12px 16px 0;
-}
-
-.app-main {
-  flex: 1 1 auto;
-  width: 100%;
-  /* padding-bottom: 110px; */
-}
-
-.tab-container {
-  position: relative;
-  width: 100%;
-  min-height: 200px;
-}
-
-.tab-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-
-.page-title {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-}
-
-.app-status-bar {
-  position: sticky;
-  top: 12px;
-  left: 0;
-  right: 0;
-  margin: 12px 0;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 3px solid #000000;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(6px);
-  z-index: 40;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  /* gap: 16px; */
-}
-
-.status-item {
-  /* display: flex; */
-  /* align-items: center; */
-  /* gap: 6px; */
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* .status-icon {
-  font-size: 18px;
 } */
 
-.app-nav {
-  position: fixed;
-  bottom: calc(30px + env(safe-area-inset-bottom));
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(80%, 640px);
-  border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border: 3px solid #000000;
-  background: rgba(255, 255, 255, 0.78);
-  padding: 6px;
-  backdrop-filter: blur(6px);
-  gap: 6px;
-  z-index: 50;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.tab-button {
-  border: none;
-  border-radius: 3px;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-}
-
-.tab-button.active {
-  background: #000000;
-  color: #ffffff;
-}
-
-.tab-button:focus-visible {
-  outline: 2px solid #0ea5e9;
-  outline-offset: 2px;
-}
-
-/* Dark mode: make app background and base text dark-themed,
-   but leave quest cards/styles as-is (white backgrounds). */
+/* Dark mode: global background and text */
 @media (prefers-color-scheme: dark) {
   html,
   :root {
@@ -162,32 +54,5 @@ body {
   body {
     background: #000000;
     color: #e5e7eb;
-  }
-
-  .app-main {
-    background: #000000;
-  }
-
-  .page-title,
-  .page-sub {
-    color: inherit;
-  }
-
-  /* Status bar: match navbar styling */
-  .app-status-bar {
-    border-color: #ffffff;
-    background: rgba(0, 0, 0, 0.85);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
-  }
-
-  /* Navbar: soften background and adjust active contrast in dark mode */
-  .app-nav {
-    border-color: #ffffff;
-    background: rgba(0, 0, 0, 0.7);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7);
-  }
-  .tab-button.active {
-    background: #ffffff;
-    color: #000000;
   }
 }

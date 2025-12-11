@@ -15,14 +15,6 @@
 .quests-list-wrap {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-}
-
-.quest-card {
-  overflow: hidden;
-  border: 3px solid var(--class-border, #000000);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .quest-card-header {
@@ -30,18 +22,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
-  background: #f8fafc;
+  padding: 12px 12px;
+  margin-bottom: 12px;
 }
 
 .header-content {
-  /* padding-left: 12px; */
+  flex: 1;
 }
 .header-title {
   margin: 0;
   font-size: 18px;
-  font-weight: 700;
-  color: #0f172a;
+  font-weight: 600;
+  color: var(--color-bg-dark);
 }
 .header-count {
   color: #475569;
@@ -98,11 +90,11 @@
 
 .quest-items {
   margin: 0;
-  padding: 10px;
+  padding: 12px 0;
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 .quest-item {
   display: flex;
@@ -110,7 +102,7 @@
   justify-content: space-between;
   padding: 8px;
   border-radius: 4px;
-  background: #f8fafc;
+  background: var(--color-bg-card);
   border: 2px solid var(--class-border, #000000);
 }
 .quest-item.is-disabled {
@@ -121,7 +113,7 @@
 }
 .quest-title {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--color-bg-dark);
 }
 .quest-desc {
   color: #475569;
@@ -302,10 +294,6 @@ select {
     border-color: var(--class-border, #ffffff);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.75);
     background: #000000;
-  }
-  .quest-card-header {
-    background: #202020;
-    /* border-bottom-color: var(--class-border, #ffffff); */
   }
   .header-title {
     color: #e5e7eb;

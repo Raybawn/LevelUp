@@ -5,6 +5,16 @@ import {
   type QuestInstance,
 } from "../db/db";
 
+// Helper function to shuffle an array
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 function interpolateNumber(level: number, min: number, max: number): number {
   const clamped = Math.max(1, Math.min(100, level));
   const t = (clamped - 1) / 99; // 0..1
@@ -61,7 +71,9 @@ export async function generateDailyQuests(): Promise<void> {
       (t) => t.class === cls.id && t.enabled
     );
     const slots = cls.dailyQuestSlots;
-    const selected = enabledForClass.slice(0, slots); // naive: first N enabled
+    // Shuffle and pick random N quests instead of always first N
+    const shuffled = shuffleArray(enabledForClass);
+    const selected = shuffled.slice(0, slots);
 
     // Clear previous active daily quests for this class
     const now = new Date();
@@ -120,7 +132,8 @@ export async function generateDailyQuestsForClass(
     (t) => t.class === cls.id && t.enabled
   );
   const slots = cls.dailyQuestSlots;
-  const selected = enabledForClass.slice(0, slots);
+  const shuffled = shuffleArray(enabledForClass);
+  const selected = shuffled.slice(0, slots);
 
   const now = new Date();
   const midnight = new Date(
@@ -183,7 +196,7 @@ export async function generateWeeklyQuests(): Promise<void> {
   const dailies = templates.filter((t) => t.type === "Daily" && t.enabled);
   const pickCount = Math.min(5, dailies.length);
   // Shuffle and pick random dailies for variety
-  const shuffled = dailies.sort(() => Math.random() - 0.5);
+  const shuffled = shuffleArray(dailies);
   const picked = shuffled.slice(0, pickCount);
 
   // Clear previous weekly

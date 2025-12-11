@@ -1,9 +1,30 @@
-.level-badge {
+/* .level-badge {
   font-size: 14px;
   font-weight: 600;
   padding: 4px 10px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 12px;
+} */
+
+/* Class card with dynamic coloring */
+.card-container.home-class-card {
+  border-style: solid;
+  padding: 0;
+}
+
+/* Weekly completed card (small variant) */
+.card-container-small.home-weekly-completed {
+  padding: 10px;
+}
+
+/* Weekly bundle panel */
+.card-container.home-weekly-panel {
+  border-color: #4b5563;
+  padding: 12px;
+}
+
+.home-weekly-panel .quest-progress-card {
+  border-color: #4b5563;
 }
 
 .xp-bar-bg {
@@ -27,19 +48,19 @@
   text-align: center;
 }
 
-.btn-small {
+/* .btn-small {
   padding: 4px 8px;
   font-size: 12px;
-}
+} */
 
-.quest-type-badge {
+/* .quest-type-badge {
   font-size: 11px;
   font-weight: 600;
   padding: 2px 6px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   text-transform: uppercase;
-}
+} */
 
 /* Layout helpers */
 .flex-between {
@@ -60,30 +81,33 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
+  padding: 12px 12px 0 12px;
 }
 
 .class-title {
   margin: 0;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 /* Quest slot info box */
-.quest-slot-info {
+/* .quest-slot-info {
   margin-bottom: 12px;
   padding: 8px;
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px;
-}
+} */
 
-.quest-slot-label {
+/* .quest-slot-label {
   font-weight: 600;
   font-size: 14px;
-}
+} */
 
-.quest-slot-buttons {
+/* .quest-slot-buttons {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-}
+} */
 
 /* Quest card sections */
 .quest-title-row {
@@ -121,33 +145,31 @@
 
 .quest-progress-text {
   margin-left: 8px;
-  font-size: 14px;
+  font-size: 16px;
   color: #64748b;
 }
 
 /* Placeholder quest slot */
-.quest-placeholder {
+/* .quest-placeholder {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
   opacity: 0.6;
-}
+} */
 
-.quest-placeholder-text {
+/* .quest-placeholder-text {
   margin-top: 4px;
   font-size: 14px;
-}
+} */
 
 /* Weekly bundle */
-.weekly-panel {
-  border: 3px solid #4b5563;
-  border-left: 6px solid #4b5563;
+.home-weekly-panel {
   box-shadow: 4px 4px 0 #4b556322;
 }
 
-.weekly-completed {
+.home-weekly-completed {
   opacity: 0.7;
 }
 
@@ -158,11 +180,10 @@
 
 /* Quest Progress Cards */
 .quest-progress-card {
-  padding: 16px;
-  background: #f8fafc;
-  border: 2px solid #000;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  background: var(--color-bg-card);
+  border-radius: 4px;
+  box-shadow: none;
 }
 
 .quest-progress-input {
@@ -191,11 +212,10 @@
 
 .quest-progress-bar {
   height: 12px;
-  background: #e2e8f0;
   border: 2px solid #000;
   border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 12px;
+  margin: 12px 0;
 }
 
 .quest-progress-bar-fill {
