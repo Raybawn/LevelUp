@@ -4,11 +4,12 @@ import { VitePWA } from "vite-plugin-pwa";
 import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig({
+  base: "/LevelUp/",
   server: {
-    https: false,
+    https: true,
   },
   preview: {
-    https: false,
+    https: true,
   },
   plugins: [
     mkcert(),
@@ -23,17 +24,17 @@ export default defineConfig({
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
-        start_url: "/",
-        scope: "/",
+        start_url: "/LevelUp/",
+        scope: "/LevelUp/",
         icons: [
           {
-            src: "/icon-192x192.png",
+            src: "/LevelUp/icon-192x192.png",
             sizes: "192x192",
             type: "image/png",
             purpose: "any maskable",
           },
           {
-            src: "/icon-512x512.png",
+            src: "/LevelUp/icon-512x512.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "any maskable",
