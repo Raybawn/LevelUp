@@ -5,10 +5,14 @@
     <title>Redirecting...</title>
     <script type="text/javascript">
       // Redirect to index.html with the path preserved
-      var pathSegments = window.location.pathname.split('/').filter(function(p) { return p; });
-      var isLevelUpRepo = pathSegments[0] === 'LevelUp';
-      var basePath = isLevelUpRepo ? '/LevelUp/' : '/';
-      window.location.replace(basePath + '#' + window.location.pathname);
+      var pathSegments = window.location.pathname
+        .split("/")
+        .filter(function (p) {
+          return p;
+        });
+      var isLevelUpRepo = pathSegments[0] === "LevelUp";
+      var basePath = isLevelUpRepo ? "/LevelUp/" : "/";
+      window.location.replace(basePath + "#" + window.location.pathname);
     </script>
   </head>
   <body></body>
