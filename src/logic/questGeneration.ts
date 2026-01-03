@@ -50,8 +50,9 @@ function rewardFromTemplate(
   template: QuestTemplate,
   classLevel: number
 ): { xp: number; gold: number } {
-  // Slight scaling: +0..50% based on level
-  const scale = 1 + (Math.max(1, Math.min(100, classLevel)) - 1) / 200;
+  // Scale rewards: level 1 = 1x, level 100 = 10x
+  const clamped = Math.max(1, Math.min(100, classLevel));
+  const scale = 1 + (clamped - 1) / 11; // 1x at level 1, 10x at level 100
   return {
     xp: Math.round(template.baseXP * scale),
     gold: Math.round(template.baseGold * scale),
@@ -178,9 +179,9 @@ export async function generateDailyQuestsForClass(
 
 export async function generateWeeklyQuests(): Promise<void> {
   const classes = await db.classes.toArray();
-  // Gate weekly quests behind progress: at least 3 classes at level >= 5
+  // Gate weekly quests behind progress: at least 3 classes at level >= 3
   const eligibleCount = classes.filter(
-    (c) => c.isUnlocked && c.level >= 5
+    (c) => c.isUnlocked && c.level >= 3
   ).length;
   if (eligibleCount < 3) {
     return;
@@ -241,7 +242,7 @@ export async function generateWeeklyQuests(): Promise<void> {
 export async function isWeeklyUnlocked(): Promise<boolean> {
   const classes = await db.classes.toArray();
   const eligibleCount = classes.filter(
-    (c) => c.isUnlocked && c.level >= 5
+    (c) => c.isUnlocked && c.level >= 3
   ).length;
   return eligibleCount >= 3;
 }

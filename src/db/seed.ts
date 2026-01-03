@@ -15,6 +15,67 @@ export function calculateXPToNextLevel(level: number): number {
 }
 
 /**
+ * Sync quest templates: add new ones from JSON without removing existing
+ * This runs on every app load to ensure new templates are added for existing users
+ */
+export async function syncQuestTemplates(): Promise<void> {
+  try {
+    type QuestCategory = Record<string, any[]>;
+    const templates = questTemplatesData as QuestCategory;
+
+    // Collect all templates from JSON
+    const templatesFromJson: any[] = [];
+    for (const [category, quests] of Object.entries(templates)) {
+      if (category === "Weekly" || category === "Bard") continue;
+
+      for (const quest of quests) {
+        templatesFromJson.push({
+          title: quest.title,
+          description: quest.description,
+          type: quest.type as "Daily" | "Weekly",
+          class: quest.class,
+          baseXP: quest.baseXP,
+          baseGold: quest.baseGold,
+          enabled: quest.enabled,
+          scaling: quest.scaling,
+          level1RequirementCount: quest.level1Requirements
+            ? parseInt(quest.level1Requirements)
+            : 1,
+          level100RequirementCount: quest.level100Requirements
+            ? parseInt(quest.level100Requirements)
+            : 1,
+          requirementCount: quest.requirement ? parseInt(quest.requirement) : 1,
+          isCustom: false,
+          createdAt: new Date(),
+        });
+      }
+    }
+
+    // Get existing templates to avoid duplicates
+    const existingTemplates = await db.questTemplates.toArray();
+
+    // Add new templates that don't already exist
+    for (const newTemplate of templatesFromJson) {
+      const exists = existingTemplates.some(
+        (existing) =>
+          existing.title === newTemplate.title &&
+          existing.class === newTemplate.class &&
+          existing.type === newTemplate.type
+      );
+
+      if (!exists) {
+        await db.questTemplates.add(newTemplate);
+        console.log(`Added new quest template: ${newTemplate.title}`);
+      }
+    }
+
+    console.log("Quest templates synced!");
+  } catch (error) {
+    console.error("Failed to sync quest templates:", error);
+  }
+}
+
+/**
  * Initialize database with default data on first launch
  */
 export async function initializeDatabase(): Promise<void> {
@@ -120,6 +181,8 @@ export async function ensureInitialized(): Promise<void> {
   initPromise = (async () => {
     try {
       await initializeDatabase();
+      // After initialization, sync templates to pick up any new ones
+      await syncQuestTemplates();
     } catch (error) {
       console.error("Failed to initialize database:", error);
 

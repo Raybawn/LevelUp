@@ -4,7 +4,7 @@
   import { db, type CharacterClass } from "../../db/db";
   import { ensureInitialized } from "../../db/seed";
   import { completeQuest, rerollQuest, getRerollCost, unlockClass, unlockQuestSlot, collectWeeklyReward, updateQuestProgress, incrementQuestProgress, decrementQuestProgress } from "../../logic/questActions";
-  import { getSortedClasses } from "../../logic/classOrdering";
+  import { getSortedClasses, getWeeklyPosition } from "../../logic/classOrdering";
   import { onMount } from "svelte";
   import classConfig from "../../data/classConfig.json";
 
@@ -12,7 +12,7 @@
   let rerollCost = 10;
   let classes: CharacterClass[] = [];
   let questsByClass: Record<string, Array<{ id: number; title: string; description: string; requirementCount: number; progress: number; progressGoal: number; xpReward: number; goldReward: number; type: string; slotIndex: number; status: string }>> = {};
-
+  let weeklyPosition: number = -1;
   const CLASS_UNLOCK_COST = 200;
   const SLOT_COSTS = { slot3: 50, slot4: 100, slot5: 150 };
   const SLOT_LEVEL_REQUIREMENTS = { slot3: 5, slot4: 10, slot5: 15 };
@@ -30,6 +30,7 @@
     // Fetch classes and sort by user preference (unlocked first, then locked, within each by preference)
     let unsortedClasses = await db.classes.toArray();
     classes = await getSortedClasses(unsortedClasses, "home");
+    weeklyPosition = await getWeeklyPosition();
 
     const active = await db.questInstances.where('status').equals('active').toArray();
     
@@ -79,6 +80,14 @@
     await ensureInitialized();
     await loadData();
 
+    // Reload data when page becomes visible (tab focus or app reopened)
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible') {
+        await loadData();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     // Periodically check if day has changed and reload data
     const dayCheckInterval = setInterval(async () => {
       const currentDay = new Date().getDate();
@@ -89,6 +98,7 @@
 
     return () => {
       clearInterval(dayCheckInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   });
 
@@ -232,13 +242,102 @@
     </div>
   </div>
 
-  {#each classes as charClass}
+  {#each classes as charClass, classIndex}
     {@const color = getClassColor(charClass.name)}
     {@const colorDark = getClassColorDark(charClass.name)}
     {@const colorDimmed = getClassColorDimmed(charClass.name)}
     {@const borderColor = color}
     {@const xpPercent = getXPPercentage(charClass)}
     {@const classQuests = questsByClass[charClass.name] || []}
+    
+    {#if weeklyPosition >= 0 && weeklyPosition === classIndex && weeklyBundle.length > 0}
+      <!-- Weekly Bundle Panel at this position -->
+      <div class="card-container home-weekly-panel">
+        <div class="class-header">
+          <h3 style="margin:0">Weekly Quests</h3>
+          <button 
+            class="btn btn-primary"
+            on:click={handleCollectWeekly}
+            disabled={!weeklyBundle.every(w => w.status === 'completed')}
+          >
+            Collect Weekly Reward
+          </button>
+        </div>
+        {#each weeklyBundle as w}
+          {@const isComplete = w.progress >= w.progressGoal}
+          {@const progressPercent = (w.progress / w.progressGoal) * 100}
+          {#if w.status === 'active'}
+            <div class="quest-progress-card" style="margin-bottom:12px">
+              <!-- Title row with reroll button -->
+              <div class="quest-title-row">
+                <div style="flex:1">
+                  <strong class="quest-title-text">{w.title}</strong>
+                  <span class="badge-small" style="margin-left:6px">Weekly</span>
+                </div>
+                <div class="flex-center">
+                  <div class="quest-rewards">
+                    <div class="quest-xp-reward">{w.xpReward} XP</div>
+                    <div class="quest-gold-reward">+{w.goldReward} Gold</div>
+                  </div>
+                  <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleReroll(w.id)} title="Reroll quest">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M23 4v6h-6"/>
+                      <path d="M20.49 15a9 9 0 1 1-2-8.83"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="quest-description">{w.description}</div>
+
+              <!-- Progress input and bar -->
+              <div class="spacing-8">
+                <input 
+                  class="quest-progress-input" 
+                  type="number"
+                  min="0"
+                  max={w.progressGoal}
+                  value={w.progress}
+                  on:input={(e) => handleProgressInput(w.id, e.currentTarget.value)}
+                  placeholder="{w.progress} / {w.progressGoal}"
+                />
+                <span class="quest-progress-text">/ {w.progressGoal}</span>
+              </div>
+              <div class="quest-progress-bar" style="border-color:#fbbf24">
+                <div class="quest-progress-bar-fill" style="width:{progressPercent}%;background:#fbbf24"></div>
+              </div>
+
+              <!-- Action buttons -->
+              <div class="quest-button-row">
+                <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleDecrement(w.id)} aria-label="Decrease progress">−</button>
+                <button 
+                  class="btn"
+                  class:btn-success={isComplete}
+                  style="{isComplete ? '' : 'background:#fbbf24;color:#000;'}"
+                  on:click={() => handleCompleteOrCollect(w.id, w.progress, w.progressGoal)}
+                >
+                  {isComplete ? "Collect Reward" : "Complete Quest"}
+                </button>
+                <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleIncrement(w.id)} aria-label="Increase progress">+</button>
+              </div>
+            </div>
+          {:else}
+            <div class="card-container-small home-weekly-completed flex-between" style="gap:8px;margin-bottom:8px">
+              <div style="flex:1">
+                <strong>{w.title}</strong>
+                <span class="badge-small" style="margin-left:6px">Weekly</span>
+                <div class="weekly-completed-text text-muted">{w.description}</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <span class="text-muted" style="font-size:13px">✓ {w.status}</span>
+              </div>
+            </div>
+          {/if}
+        {/each}
+        <div class="text-muted" style="font-size:13px;margin-top:8px">Complete all weekly quests to collect the combined reward (sum × 3). XP is distributed to all unlocked classes.</div>
+      </div>
+    {/if}
     
     <div class="card-container home-class-card" style="background:{colorDimmed}; border-color: {charClass.isUnlocked ? borderColor : borderColor + '60'}; box-shadow: 0 4px 12px {borderColor + '80'}">
       <div class="class-header">
@@ -382,8 +481,8 @@
     </div>
   {/each}
 
-  <!-- Weekly Bundle Panel -->
-  {#if weeklyBundle.length > 0}
+  <!-- Render weekly at end if position is beyond class count or not set -->
+  {#if (weeklyPosition < 0 || weeklyPosition >= classes.length) && weeklyBundle.length > 0}
     <div class="card-container home-weekly-panel">
       <div class="class-header">
         <h3 style="margin:0">Weekly Quests</h3>
