@@ -245,8 +245,8 @@ export async function completeQuest(
   let leveledUp = false;
 
   // Check for level-ups (can level multiple times if XP is high enough)
-  while (newXP >= charClass.xpToNextLevel && level < 100) {
-    newXP -= charClass.xpToNextLevel;
+  while (level < 100 && newXP >= calculateXPToNextLevel(level)) {
+    newXP -= calculateXPToNextLevel(level);
     level++;
     leveledUp = true;
   }
@@ -268,10 +268,15 @@ export async function completeQuest(
   // If player crosses the weekly unlock threshold, ensure a weekly bundle exists
   try {
     if (await isWeeklyUnlocked()) {
-      const activeWeekly = await db.questInstances
-        .where({ type: "Weekly", status: "active" })
-        .toArray();
-      if (activeWeekly.length === 0) {
+      const user = await db.user.get("player");
+      const now = new Date();
+      const lastGen = user?.lastWeeklyGenerated;
+
+      // Only regenerate if more than 7 days have passed since last generation
+      if (
+        !lastGen ||
+        now.getTime() - lastGen.getTime() > 7 * 24 * 60 * 60 * 1000
+      ) {
         await generateWeeklyQuests();
       }
     }

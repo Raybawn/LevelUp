@@ -13,6 +13,7 @@ export interface User {
   createdAt: Date;
   lastActive: Date;
   classOrder?: string[]; // Custom order of class names
+  lastWeeklyGenerated?: Date; // Track when weekly quests were last generated
 }
 
 export interface CharacterClass {
@@ -50,6 +51,7 @@ export interface QuestInstance {
   id?: number; // Auto-increment
   templateId: number;
   type: "Daily" | "Weekly";
+  templateType: "Daily" | "Weekly"; // Track original template type for display
   class: string;
   title: string;
   description: string;

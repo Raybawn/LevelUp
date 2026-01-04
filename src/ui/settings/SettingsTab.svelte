@@ -22,7 +22,7 @@
     if (user) {
       gold = user.gold;
       rerollCost = getRerollCost(user.dailyRerollCount);
-      classOrder = user.classOrder ?? ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep", "Weekly"];
+      classOrder = user.classOrder ?? ["Weekly", "Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"];
     }
   });
 
@@ -106,7 +106,6 @@
   }
 
   function getClassColor(className: string): string {
-    if (className === "Weekly") return "#fbbf24"; // Golden for Weekly
     return (classConfig as any)[className]?.color ?? "#888";
   }
 </script>

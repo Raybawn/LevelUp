@@ -36,9 +36,9 @@
     "description": "Sleep and Relaxation"
   },
   "Weekly": {
-    "color": "#c5a997",
-    "colorDark": "#8a755e",
-    "colorDimmed": "#c5a99720",
+    "color": "#fbbf24",
+    "colorDark": "#f59e0b",
+    "colorDimmed": "#fbbf2420",
     "description": "Weekly Challenges"
   }
 }

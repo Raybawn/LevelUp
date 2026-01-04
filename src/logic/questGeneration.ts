@@ -100,6 +100,7 @@ export async function generateDailyQuests(): Promise<void> {
       const instance: QuestInstance = {
         templateId: t.id!,
         type: "Daily",
+        templateType: t.type,
         class: cls.id,
         title: t.title,
         description: t.description,
@@ -159,6 +160,7 @@ export async function generateDailyQuestsForClass(
     await db.questInstances.add({
       templateId: t.id!,
       type: "Daily",
+      templateType: t.type,
       class: cls.id,
       title: t.title,
       description: t.description,
@@ -195,10 +197,25 @@ export async function generateWeeklyQuests(): Promise<void> {
   // Pick from ALL enabled Daily templates (not class-specific)
   const templates = await db.questTemplates.toArray();
   const dailies = templates.filter((t) => t.type === "Daily" && t.enabled);
-  const pickCount = Math.min(5, dailies.length);
-  // Shuffle and pick random dailies for variety
-  const shuffled = shuffleArray(dailies);
-  const picked = shuffled.slice(0, pickCount);
+  const weeklies = templates.filter((t) => t.type === "Weekly" && t.enabled);
+
+  // Determine pick counts: if weekly quests exist, pick 1 weekly + 4 dailies, otherwise pick 5 dailies
+  const weeklyCount = weeklies.length > 0 ? 1 : 0;
+  const dailyCount = weeklyCount > 0 ? 4 : 5;
+
+  // Shuffle and pick random weeklies (max 1)
+  const shuffledWeeklies = shuffleArray(weeklies);
+  const pickedWeeklies = shuffledWeeklies.slice(0, weeklyCount);
+
+  // Shuffle and pick random dailies
+  const shuffledDailies = shuffleArray(dailies);
+  const pickedDailies = shuffledDailies.slice(
+    0,
+    Math.min(dailyCount, dailies.length)
+  );
+
+  // Combine both
+  const picked = [...pickedWeeklies, ...pickedDailies];
 
   // Clear previous weekly
   const now = new Date();
@@ -219,6 +236,7 @@ export async function generateWeeklyQuests(): Promise<void> {
     const instance: QuestInstance = {
       templateId: t.id!,
       type: "Weekly",
+      templateType: t.type,
       class: t.class, // Keep for display purposes only
       title: t.title,
       description: t.description,
@@ -235,6 +253,12 @@ export async function generateWeeklyQuests(): Promise<void> {
       slotIndex: i,
     };
     await db.questInstances.add(instance);
+  }
+
+  // Update user's lastWeeklyGenerated timestamp
+  const user = await db.user.get("player");
+  if (user) {
+    await db.user.update("player", { lastWeeklyGenerated: new Date() });
   }
 }
 

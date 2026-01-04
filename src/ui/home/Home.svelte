@@ -5,6 +5,7 @@
   import { ensureInitialized } from "../../db/seed";
   import { completeQuest, rerollQuest, getRerollCost, unlockClass, unlockQuestSlot, collectWeeklyReward, updateQuestProgress, incrementQuestProgress, decrementQuestProgress } from "../../logic/questActions";
   import { getSortedClasses, getWeeklyPosition } from "../../logic/classOrdering";
+  import { isWeeklyUnlocked } from "../../logic/questGeneration";
   import { onMount } from "svelte";
   import classConfig from "../../data/classConfig.json";
 
@@ -13,10 +14,11 @@
   let classes: CharacterClass[] = [];
   let questsByClass: Record<string, Array<{ id: number; title: string; description: string; requirementCount: number; progress: number; progressGoal: number; xpReward: number; goldReward: number; type: string; slotIndex: number; status: string }>> = {};
   let weeklyPosition: number = -1;
+  let weeklyUnlocked: boolean = false;
   const CLASS_UNLOCK_COST = 200;
   const SLOT_COSTS = { slot3: 50, slot4: 100, slot5: 150 };
   const SLOT_LEVEL_REQUIREMENTS = { slot3: 5, slot4: 10, slot5: 15 };
-  let weeklyBundle: Array<{ id: number; title: string; description: string; requirementCount: number; progress: number; progressGoal: number; xpReward: number; goldReward: number; status: string }> = [];
+  let weeklyBundle: Array<{ id: number; title: string; description: string; requirementCount: number; progress: number; progressGoal: number; xpReward: number; goldReward: number; status: string; templateType: string }> = [];
 
   let lastLoadDay = new Date().getDate();
 
@@ -31,6 +33,7 @@
     let unsortedClasses = await db.classes.toArray();
     classes = await getSortedClasses(unsortedClasses, "home");
     weeklyPosition = await getWeeklyPosition();
+    weeklyUnlocked = await isWeeklyUnlocked();
 
     const active = await db.questInstances.where('status').equals('active').toArray();
     
@@ -70,7 +73,8 @@
         progressGoal: w.progressGoal,
         xpReward: w.xpReward,
         goldReward: w.goldReward,
-        status: w.status 
+        status: w.status,
+        templateType: w.templateType
       }));
 
     lastLoadDay = new Date().getDate();
@@ -118,7 +122,7 @@
     
     try {
       const result = await rerollQuest(questId);
-      alert(`Quest rerolled for ${result.cost} gold!\nNew quest: ${result.newQuestTitle}`);
+      // alert(`Quest rerolled for ${result.cost} gold!\nNew quest: ${result.newQuestTitle}`);
       await loadData();
     } catch (e: any) {
       alert(`Failed to reroll: ${e.message}`);
@@ -128,7 +132,7 @@
   async function handleUnlockClass(className: string) {
     try {
       await unlockClass(className);
-      alert(`Unlocked ${className} for ${CLASS_UNLOCK_COST}g!`);
+      // alert(`Unlocked ${className} for ${CLASS_UNLOCK_COST}g!`);
       await loadData();
     } catch (err: any) {
       alert(`Failed to unlock class: ${err.message}`);
@@ -145,7 +149,7 @@
 
     try {
       await unlockQuestSlot(className, slot);
-      alert(`Unlocked quest slot for ${className}!`);
+      // alert(`Unlocked quest slot for ${className}!`);
       await loadData();
     } catch (err: any) {
       alert(`Failed to unlock slot: ${err.message}`);
@@ -155,7 +159,7 @@
   async function handleCollectWeekly() {
     try {
       const result = await collectWeeklyReward();
-      alert(`Weekly reward collected!\n+${result.goldAwarded} gold\n+${result.totalXPDistributed} XP distributed across classes`);
+      // alert(`Weekly reward collected!\n+${result.goldAwarded} gold\n+${result.totalXPDistributed} XP distributed across classes`);
       await loadData();
     } catch (err: any) {
       alert(`Cannot collect weekly reward: ${err.message}`);
@@ -250,36 +254,61 @@
     {@const xpPercent = getXPPercentage(charClass)}
     {@const classQuests = questsByClass[charClass.name] || []}
     
-    {#if weeklyPosition >= 0 && weeklyPosition === classIndex && weeklyBundle.length > 0}
+    {#if weeklyPosition >= 0 && weeklyPosition === classIndex}
       <!-- Weekly Bundle Panel at this position -->
-      <div class="card-container home-weekly-panel">
+      {@const weeklyColor = getClassColor('Weekly')}
+      {@const weeklyColorDimmed = getClassColorDimmed('Weekly')}
+      <div class="card-container home-class-card" style="background:{weeklyColorDimmed}; border-color: {weeklyUnlocked ? weeklyColor : weeklyColor + '60'}; box-shadow: 0 4px 12px {weeklyUnlocked ? weeklyColor + '80' : weeklyColor + '40'}">
         <div class="class-header">
-          <h3 style="margin:0">Weekly Quests</h3>
-          <button 
-            class="btn btn-primary"
-            on:click={handleCollectWeekly}
-            disabled={!weeklyBundle.every(w => w.status === 'completed')}
-          >
-            Collect Weekly Reward
-          </button>
+          <div>
+            <h3 class="class-title" style="color:{weeklyColor}">Weekly</h3>
+            <div class="text-small text-dimmed" style="color:{weeklyColor}">{getClassDescription('Weekly')}</div>
+          </div>
         </div>
-        {#each weeklyBundle as w}
-          {@const isComplete = w.progress >= w.progressGoal}
-          {@const progressPercent = (w.progress / w.progressGoal) * 100}
-          {#if w.status === 'active'}
-            <div class="quest-progress-card" style="margin-bottom:12px">
+        {#if !weeklyUnlocked}
+          <div style="padding: 0 12px; margin-bottom: 12px;">
+            <div class="muted" style="color:{weeklyColor}">Reach Level 3 with 3 classes to unlock!</div>
+          </div>
+        {:else}
+          {#if weeklyBundle.length > 0}
+            <div class="class-header" style="border-top: 1px solid {weeklyColor}20; padding-top: 12px; margin-top: 12px;">
+              <div></div>
+              {#if true}
+                {@const allCompleted = weeklyBundle.every(w => w.status === 'completed')}
+                <button
+                  class="btn"
+                  style="background: {allCompleted ? '#3de061' : '#d1d5db'}; opacity: {allCompleted ? '1' : '0.6'}; padding: 8px 16px;"
+                  on:click={handleCollectWeekly}
+                  disabled={!allCompleted}
+                >
+                  Collect Weekly Reward
+                </button>
+              {/if}
+            </div>
+          {/if}
+          <div style="padding: 0 12px">
+            {#if weeklyBundle.length === 0}
+              <div style="text-align: center; padding: 24px 12px; color: {weeklyColor};">
+                <p class="text-dimmed" style="color: {weeklyColor}; font-size: 14px;">Weekly quests gonna be available next week</p>
+              </div>
+            {:else}
+              {#each weeklyBundle as w}
+            {@const isComplete = w.progress >= w.progressGoal}
+            {@const progressPercent = (w.progress / w.progressGoal) * 100}
+            {#if w.status === 'active'}
+              <div class="quest-progress-card" style="margin-bottom:12px;border: 2px solid {getClassColor('Weekly')}">
               <!-- Title row with reroll button -->
               <div class="quest-title-row">
                 <div style="flex:1">
                   <strong class="quest-title-text">{w.title}</strong>
-                  <span class="badge-small" style="margin-left:6px">Weekly</span>
+                  <span class="badge-small" style="margin-left:6px">{w.templateType || 'Daily'}</span>
                 </div>
                 <div class="flex-center">
                   <div class="quest-rewards">
                     <div class="quest-xp-reward">{w.xpReward} XP</div>
                     <div class="quest-gold-reward">+{w.goldReward} Gold</div>
                   </div>
-                  <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleReroll(w.id)} title="Reroll quest">
+                  <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleReroll(w.id)} title="Reroll quest">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M23 4v6h-6"/>
                       <path d="M20.49 15a9 9 0 1 1-2-8.83"/>
@@ -304,38 +333,43 @@
                 />
                 <span class="quest-progress-text">/ {w.progressGoal}</span>
               </div>
-              <div class="quest-progress-bar" style="border-color:#fbbf24">
-                <div class="quest-progress-bar-fill" style="width:{progressPercent}%;background:#fbbf24"></div>
+              <div class="quest-progress-bar" style="border-color:{getClassColor('Weekly')}">
+                <div class="quest-progress-bar-fill" style="width:{progressPercent}%;background:{getClassColor('Weekly')}"></div>
               </div>
 
               <!-- Action buttons -->
               <div class="quest-button-row">
-                <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleDecrement(w.id)} aria-label="Decrease progress">−</button>
+                <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleDecrement(w.id)} aria-label="Decrease progress">−</button>
                 <button 
                   class="btn"
                   class:btn-success={isComplete}
-                  style="{isComplete ? '' : 'background:#fbbf24;color:#000;'}"
+                  style="{isComplete ? '' : `background:${getClassColorDark('Weekly')};color:#000;`}"
                   on:click={() => handleCompleteOrCollect(w.id, w.progress, w.progressGoal)}
                 >
                   {isComplete ? "Collect Reward" : "Complete Quest"}
                 </button>
-                <button class="btn btn-small btn-40px" style="background:#fbbf24;color:#000" on:click={() => handleIncrement(w.id)} aria-label="Increase progress">+</button>
+                <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleIncrement(w.id)} aria-label="Increase progress">+</button>
               </div>
-            </div>
-          {:else}
-            <div class="card-container-small home-weekly-completed flex-between" style="gap:8px;margin-bottom:8px">
-              <div style="flex:1">
-                <strong>{w.title}</strong>
-                <span class="badge-small" style="margin-left:6px">Weekly</span>
-                <div class="weekly-completed-text text-muted">{w.description}</div>
               </div>
-              <div style="display:flex;gap:6px">
-                <span class="text-muted" style="font-size:13px">✓ {w.status}</span>
+            {:else}
+              <div class="card-container-small home-weekly-completed flex-between" style="gap:8px;margin-bottom:8px;border: 2px solid {getClassColor('Weekly')}80">
+                <div style="flex:1">
+                  <strong>{w.title}</strong>
+                  <span class="badge-small" style="margin-left:6px">{w.templateType || 'Daily'}</span>
+                  <div class="weekly-completed-text text-muted">{w.description}</div>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <span class="text-muted" style="font-size:13px">✓ {w.status}</span>
+                </div>
               </div>
-            </div>
+            {/if}
+          {/each}
           {/if}
-        {/each}
-        <div class="text-muted" style="font-size:13px;margin-top:8px">Complete all weekly quests to collect the combined reward (sum × 3). XP is distributed to all unlocked classes.</div>
+        </div>
+        {#if weeklyUnlocked}
+          <div class="text-small text-dimmed" style="color:{weeklyColor}; text-align:center; font-size:13px; margin:8px 0px; padding: 0 12px">Complete all weekly quests to collect the combined reward (sum × 3). XP is distributed to all unlocked classes.</div>
+        {/if}
+        {/if}
       </div>
     {/if}
     
@@ -481,36 +515,61 @@
     </div>
   {/each}
 
-  <!-- Render weekly at end if position is beyond class count or not set -->
-  {#if (weeklyPosition < 0 || weeklyPosition >= classes.length) && weeklyBundle.length > 0}
-    <div class="card-container home-weekly-panel">
+  <!-- Render weekly card at the end if weeklyPosition is at the end -->
+  {#if weeklyPosition >= 0 && weeklyPosition >= classes.length}
+    {@const weeklyColor = getClassColor('Weekly')}
+    {@const weeklyColorDimmed = getClassColorDimmed('Weekly')}
+    <div class="card-container home-class-card" style="background:{weeklyColorDimmed}; border-color: {weeklyUnlocked ? weeklyColor : weeklyColor + '60'}; box-shadow: 0 4px 12px {weeklyUnlocked ? weeklyColor + '80' : weeklyColor + '40'}">
       <div class="class-header">
-        <h3 style="margin:0">Weekly Quests</h3>
-        <button 
-          class="btn btn-primary"
-          on:click={handleCollectWeekly}
-          disabled={!weeklyBundle.every(w => w.status === 'completed')}
-        >
-          Collect Weekly Reward
-        </button>
+        <div>
+          <h3 class="class-title" style="color:{weeklyColor}">Weekly</h3>
+          <div class="text-small text-dimmed" style="color:{weeklyColor}">{getClassDescription('Weekly')}</div>
+        </div>
       </div>
-      {#each weeklyBundle as w}
-        {@const isComplete = w.progress >= w.progressGoal}
-        {@const progressPercent = (w.progress / w.progressGoal) * 100}
-        {#if w.status === 'active'}
-          <div class="quest-progress-card" style="margin-bottom:12px">
+      {#if !weeklyUnlocked}
+        <div style="padding: 0 12px; margin-bottom: 12px;">
+          <div class="muted" style="color:{weeklyColor}">Reach Level 3 with 3 classes to unlock!</div>
+        </div>
+      {:else}
+        {#if weeklyBundle.length > 0}
+          <div class="class-header" style="border-top: 1px solid {weeklyColor}20; padding-top: 12px; margin-top: 12px;">
+            <div></div>
+            {#if true}
+              {@const allCompleted = weeklyBundle.every(w => w.status === 'completed')}
+              <button
+                class="btn"
+                style="background: {allCompleted ? '#3de061' : '#d1d5db'}; opacity: {allCompleted ? '1' : '0.6'}; padding: 8px 16px;"
+                on:click={handleCollectWeekly}
+                disabled={!allCompleted}
+              >
+                Collect Weekly Reward
+              </button>
+            {/if}
+          </div>
+        {/if}
+        <div style="padding: 0 8px">
+          {#if weeklyBundle.length === 0}
+            <div style="text-align: center; padding: 24px 12px; color: {weeklyColor};">
+              <p class="text-dimmed" style="color: {weeklyColor}; font-size: 14px;">Weekly quests gonna be available next week</p>
+            </div>
+          {:else}
+            {#each weeklyBundle as w}
+            {@const isComplete = w.progress >= w.progressGoal}
+            {@const progressPercent = (w.progress / w.progressGoal) * 100}
+            {#if w.status === 'active'}
+              <div class="quest-progress-card" style="margin-bottom:12px;border: 2px solid {getClassColor('Weekly')}">
             <!-- Title row with reroll button -->
             <div class="quest-title-row">
               <div style="flex:1">
                 <strong class="quest-title-text">{w.title}</strong>
-                <span class="badge-small" style="margin-left:6px">Weekly</span>
+                <span class="badge-small" style="margin-left:6px">{w.templateType || 'Daily'}</span>
               </div>
               <div class="flex-center">
                 <div class="quest-rewards">
                   <div class="quest-xp-reward">{w.xpReward} XP</div>
                   <div class="quest-gold-reward">+{w.goldReward} Gold</div>
                 </div>
-                <button class="btn btn-small btn-40px" style="background:#4b5563;color:#fff" on:click={() => handleReroll(w.id)} title="Reroll quest">
+                <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleReroll(w.id)} title="Reroll quest">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M23 4v6h-6"/>
                     <path d="M20.49 15a9 9 0 1 1-2-8.83"/>
@@ -535,38 +594,43 @@
               />
               <span class="quest-progress-text">/ {w.progressGoal}</span>
             </div>
-            <div class="quest-progress-bar" style="border-color:#4b5563">
-              <div class="quest-progress-bar-fill" style="width:{progressPercent}%;background:#4b5563"></div>
+            <div class="quest-progress-bar" style="border-color:{getClassColor('Weekly')}">
+              <div class="quest-progress-bar-fill" style="width:{progressPercent}%;background:{getClassColor('Weekly')}"></div>
             </div>
 
             <!-- Action buttons -->
             <div class="quest-button-row">
-              <button class="btn btn-small btn-40px" style="background:#4b5563;color:#fff" on:click={() => handleDecrement(w.id)} aria-label="Decrease progress">−</button>
+              <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleDecrement(w.id)} aria-label="Decrease progress">−</button>
               <button 
                 class="btn"
                 class:btn-success={isComplete}
-                style="{isComplete ? '' : 'background:#4b5563;color:#fff;'}"
+                style="{isComplete ? '' : `background:${getClassColorDark('Weekly')};color:#000;`}"
                 on:click={() => handleCompleteOrCollect(w.id, w.progress, w.progressGoal)}
               >
                 {isComplete ? "Collect Reward" : "Complete Quest"}
               </button>
-              <button class="btn btn-small btn-40px" style="background:#4b5563;color:#fff" on:click={() => handleIncrement(w.id)} aria-label="Increase progress">+</button>
+              <button class="btn btn-small btn-40px" style="background:{getClassColorDark('Weekly')};color:#000" on:click={() => handleIncrement(w.id)} aria-label="Increase progress">+</button>
             </div>
-          </div>
-        {:else}
-          <div class="card-container-small home-weekly-completed flex-between" style="gap:8px;margin-bottom:8px">
-            <div style="flex:1">
-              <strong>{w.title}</strong>
-              <span class="badge-small" style="margin-left:6px">Weekly</span>
-              <div class="weekly-completed-text text-muted">{w.description}</div>
             </div>
-            <div style="display:flex;gap:6px">
-              <span class="text-muted" style="font-size:13px">✓ {w.status}</span>
+          {:else}
+            <div class="card-container-small home-weekly-completed flex-between" style="gap:8px;margin-bottom:8px;border: 2px solid {getClassColor('Weekly')}80">
+              <div style="flex:1">
+                <strong>{w.title}</strong>
+                <span class="badge-small" style="margin-left:6px">{w.templateType || 'Daily'}</span>
+                <div class="weekly-completed-text text-muted">{w.description}</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <span class="text-muted" style="font-size:13px">✓ {w.status}</span>
+              </div>
             </div>
-          </div>
+          {/if}
+        {/each}
         {/if}
-      {/each}
-      <div class="text-muted" style="font-size:13px;margin-top:8px">Complete all weekly quests to collect the combined reward (sum × 3). XP is distributed to all unlocked classes.</div>
+      </div>
+      {#if weeklyUnlocked}
+        <div class="text-small text-dimmed" style="color:{weeklyColor}; text-align:center; font-size:13px; margin:8px 0px; padding: 0 12px">Complete all weekly quests to collect the combined reward (sum × 3). XP is distributed to all unlocked classes.</div>
+      {/if}
+      {/if}
     </div>
   {/if}
 </div>

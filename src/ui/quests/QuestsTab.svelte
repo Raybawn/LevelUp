@@ -55,10 +55,7 @@
   $: groupedQuests = Object.entries(quests)
     .filter(([, questList]) => questList.length > 0)
     .sort(([categoryA], [categoryB]) => {
-      // Weekly always last
-      if (categoryA === "Weekly") return 1;
-      if (categoryB === "Weekly") return -1;
-      // Sort by user's classOrder preference
+      // Sort by user's classOrder preference (including Weekly if present)
       return classOrder.indexOf(categoryA) - classOrder.indexOf(categoryB);
     });
 

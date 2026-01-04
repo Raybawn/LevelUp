@@ -2,6 +2,10 @@ import { db } from "./db";
 import questTemplatesData from "../data/questTemplates.json";
 import userDefaultsData from "../data/userDefaults.json";
 import classConfigData from "../data/classConfig.json";
+import {
+  generateDailyQuests,
+  generateWeeklyQuests,
+} from "../logic/questGeneration";
 
 // Prevent multiple concurrent initializations
 let initPromise: Promise<void> | null = null;
@@ -26,8 +30,6 @@ export async function syncQuestTemplates(): Promise<void> {
     // Collect all templates from JSON
     const templatesFromJson: any[] = [];
     for (const [category, quests] of Object.entries(templates)) {
-      if (category === "Weekly" || category === "Bard") continue;
-
       for (const quest of quests) {
         templatesFromJson.push({
           title: quest.title,
@@ -102,7 +104,15 @@ export async function initializeDatabase(): Promise<void> {
           lastRerollReset: new Date(),
           createdAt: new Date(),
           lastActive: new Date(),
-          classOrder: ["Warrior", "Ranger", "Mage", "Bard", "Chef", "Sheep"], // Default order
+          classOrder: [
+            "Warrior",
+            "Ranger",
+            "Mage",
+            "Bard",
+            "Chef",
+            "Sheep",
+            "Weekly",
+          ],
         });
 
         // 2. Initialize all classes
@@ -133,7 +143,7 @@ export async function initializeDatabase(): Promise<void> {
         const templates = questTemplatesData as QuestCategory;
 
         for (const [category, quests] of Object.entries(templates)) {
-          if (category === "Weekly" || category === "Bard") continue; // Skip empty categories
+          if (category === "Weekly") continue; // Skip Weekly category (quests will be generated)
 
           for (const quest of quests) {
             await db.questTemplates.add({
@@ -161,6 +171,10 @@ export async function initializeDatabase(): Promise<void> {
         }
       }
     );
+
+    // Generate initial daily and weekly quests (outside transaction)
+    await generateDailyQuests();
+    await generateWeeklyQuests();
 
     console.log("Database initialization complete!");
   } catch (error) {

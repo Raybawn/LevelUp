@@ -203,7 +203,7 @@
             </svg>
           </button>
         {/if}
-        <div class="actions-right">
+        <div class="actions-right" style="margin-left: auto;">
           <button type="button" class="btn btn-secondary" on:click={onClose}>
             Cancel
           </button>
